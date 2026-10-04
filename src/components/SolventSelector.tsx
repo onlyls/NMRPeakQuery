@@ -1,5 +1,6 @@
 import type { SolventId, SolventMeta } from '../types/nmr';
 import { useDataset } from '../hooks/useNMRSearch';
+import { formatFormula } from '../utils/chemText';
 
 interface Props {
   value: SolventId | 'all';
@@ -11,6 +12,9 @@ interface Props {
  * - 前 12 种为一级文献覆盖的溶剂（含化合物位移数据）；
  * - 后 9 种仅由厂商参考表覆盖（referenceOnly），无化合物数据，
  *   仅用于查询溶剂自身峰与物理性质，故单独分组并标注。
+ *
+ * 展示用「中圆点」分隔名称与分子式：分子式本身可能含英文括号
+ * （如 (CD3)2CO），若再用括号包裹就会产生歧义。
  */
 export default function SolventSelector({ value, onChange }: Props) {
   const { dataset } = useDataset();
@@ -19,7 +23,7 @@ export default function SolventSelector({ value, onChange }: Props) {
   const referenceOnly = all.filter((s) => s.referenceOnly);
 
   const optionText = (s: SolventMeta) =>
-    `${s.label}（${s.formula}）`;
+    `${formatFormula(s.label)} · ${formatFormula(s.formula)}`;
 
   return (
     <label className="block">

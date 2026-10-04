@@ -16,6 +16,7 @@ import { parseSpectrumFile, peakShifts } from '../../utils/spectrumParser';
 import type { AiConfidence, AiMatchLevel, AiSpectrumPayload } from '../../types/ai';
 import { parseShifts } from '../PeakInput';
 import { SignalRow } from '../bits';
+import { formatAssignment, formatFormula, formatNucleus } from '../../utils/chemText';
 import { AiError, Caveats, RawOutput } from './shared';
 
 type Source = 'image' | 'file' | 'text';
@@ -448,7 +449,7 @@ export default function SpectrumAnalyzer({ visionAvailable }: { visionAvailable:
             <option value="none">未指定</option>
             {dataset?.solvents.map((s) => (
               <option key={s.id} value={s.id}>
-                {s.label}
+                {formatFormula(s.label)}
               </option>
             ))}
           </select>
@@ -512,7 +513,7 @@ export default function SpectrumAnalyzer({ visionAvailable }: { visionAvailable:
                       <tr key={i}>
                         <td className="px-3 py-2 font-mono font-semibold text-sky-700">{a.shift}</td>
                         <td className="px-3 py-2 text-slate-700">
-                          {a.assignment}
+                          {formatAssignment(a.assignment)}
                           {a.note && <div className="text-[11px] text-slate-400">{a.note}</div>}
                         </td>
                         <td className="px-3 py-2 text-slate-500">{a.multiplicity || '—'}</td>
@@ -585,7 +586,7 @@ export default function SpectrumAnalyzer({ visionAvailable }: { visionAvailable:
                 ))}
                 {solventDatasetSignals.length > 0 && (
                   <div className="mt-1.5 border-t border-slate-100 pt-1.5 text-[11px] text-slate-400">
-                    数据集参考（{getSolvent(solventId as SolventId)?.label} · {nucleus}）：
+                    数据集参考（{formatFormula(getSolvent(solventId as SolventId)?.label)} · {formatNucleus(nucleus)}）：
                     {solventDatasetSignals.map((s) => s.shift).join('、')}
                   </div>
                 )}

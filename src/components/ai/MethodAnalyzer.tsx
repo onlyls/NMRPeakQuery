@@ -13,6 +13,7 @@ import { resolveCompoundByLabel } from '../../utils/compoundResolve';
 import { getSolvent } from '../../utils/searchEngine';
 import type { AiMethodPayload } from '../../types/ai';
 import { SignalRow, SOLVENT_SIGNAL_KIND_LABEL } from '../bits';
+import { formatFormula, formatNucleus } from '../../utils/chemText';
 import { AiError, Caveats, RawOutput } from './shared';
 
 const NUCLEI: NucleusType[] = ['1H', '13C'];
@@ -97,10 +98,10 @@ export default function MethodAnalyzer() {
                   return (
                     <div key={i} className="rounded-lg border border-slate-200 bg-white p-3">
                       <div className="flex flex-wrap items-baseline gap-2">
-                        <span className="text-sm font-medium text-slate-800">{name}</span>
+                        <span className="text-sm font-medium text-slate-800">{formatFormula(name)}</span>
                         {solvent ? (
                           <span className="rounded bg-sky-50 px-1.5 py-0.5 text-[11px] font-medium text-sky-700 ring-1 ring-inset ring-sky-200">
-                            匹配：{solvent.label}
+                            匹配：{formatFormula(solvent.label)}
                           </span>
                         ) : (
                           <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[11px] text-slate-500">
@@ -113,7 +114,7 @@ export default function MethodAnalyzer() {
                           {solvent.signals.map((s, k) => (
                             <div key={k} className="flex flex-wrap items-baseline gap-x-2 text-xs">
                               <span className="rounded bg-slate-100 px-1.5 py-px text-[10px] text-slate-500">
-                                {s.nucleus}
+                                {formatNucleus(s.nucleus)}
                               </span>
                               <span className="text-slate-500">{SOLVENT_SIGNAL_KIND_LABEL[s.kind]}</span>
                               <span className="font-mono font-semibold text-sky-700">δ {s.shift}</span>
@@ -162,7 +163,7 @@ export default function MethodAnalyzer() {
                               return (
                                 <div key={nuc}>
                                   <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
-                                    {label} · {nuc}
+                                    {formatFormula(label)} · {formatNucleus(nuc)}
                                   </div>
                                   {arr.map((s, k) => (
                                     <SignalRow key={k} signal={s} />
@@ -173,7 +174,7 @@ export default function MethodAnalyzer() {
                             if (!block.length) {
                               return (
                                 <div key={sid} className="text-[11px] text-slate-400">
-                                  {label} 中无该化合物的文献信号。
+                                  {formatFormula(label)} 中无该化合物的文献信号。
                                 </div>
                               );
                             }

@@ -19,6 +19,7 @@ import type {
 import { useDataset } from '../hooks/useNMRSearch';
 import type { NameHit } from '../utils/searchEngine';
 import { SignalRow, formatShift, SourceBadge } from './bits';
+import { formatAssignment, formatFormula, formatNucleus } from '../utils/chemText';
 import { AiVerifyButton, SolventVerifyButton } from './ai/Verify';
 
 const CATEGORY_LABEL: Record<CompoundCategory, string> = {
@@ -53,7 +54,7 @@ function CompoundHeader({ compound }: { compound: CompoundData }) {
           {CATEGORY_LABEL[compound.category]}
         </span>
         {compound.formula && (
-          <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono">{compound.formula}</span>
+          <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono">{formatFormula(compound.formula)}</span>
         )}
         {compound.mw > 0 && <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono">
           {compound.mw} g/mol
@@ -86,7 +87,7 @@ function SolventSignals({
   return (
     <details className="group mt-2 rounded-md border border-slate-200 bg-slate-50/60">
       <summary className="flex cursor-pointer list-none items-center justify-between px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100/60">
-        <span>{label} 中全部信号</span>
+        <span>{formatFormula(label)} 中全部信号</span>
         <ChevronDown className="h-3.5 w-3.5 text-slate-400 transition group-open:rotate-180" />
       </summary>
       <div className="space-y-2 px-3 pb-2.5 pt-1">
@@ -99,7 +100,7 @@ function SolventSignals({
           return (
             <div key={nuc}>
               <div className="mb-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
-                {nuc} · {arr.length} 条
+                {formatNucleus(nuc)} · {arr.length} 条
               </div>
               <div className="space-y-1">
                 {arr.map((s, i) => (
@@ -165,7 +166,7 @@ function SingleResults({
               <CompoundHeader compound={g.compound} />
               {solventId === 'all' && (
                 <span className="ml-auto shrink-0 rounded bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-indigo-700 ring-1 ring-inset ring-indigo-200">
-                  {label}
+                  {formatFormula(label)}
                 </span>
               )}
               <AiVerifyButton compound={g.compound} solventId={g.solventId} nucleus={nucleus} />
@@ -179,7 +180,7 @@ function SingleResults({
                     </span>
                     {signal.assignment && (
                       <span className="rounded bg-slate-100 px-1.5 py-px font-mono text-[11px] text-slate-600">
-                        {signal.assignment}
+                        {formatAssignment(signal.assignment)}
                       </span>
                     )}
                     {(signal.multiplicity || signal.multiplicityRaw) && (
@@ -244,7 +245,7 @@ function MultiResults({
                   </span>
                 )}
                 <span className="rounded bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-indigo-700 ring-1 ring-inset ring-indigo-200">
-                  {label}
+                  {formatFormula(label)}
                 </span>
               </div>
               <AiVerifyButton compound={m.compound} solventId={m.solventId} nucleus={nucleus} />
@@ -263,7 +264,7 @@ function MultiResults({
                   </span>
                   {p.signal.assignment && (
                     <span className="font-mono text-[10px] text-slate-500">
-                      {p.signal.assignment}
+                      {formatAssignment(p.signal.assignment)}
                     </span>
                   )}
                   <span className="ml-auto font-mono text-[10px] text-orange-500">

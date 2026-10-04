@@ -29,6 +29,7 @@ import {
 } from '../../utils/verifyCompare';
 import type { AiCallResult, AiVerifyPayload } from '../../types/ai';
 import { SourceBadge, SOLVENT_SIGNAL_KIND_LABEL, formatMultiplicity, formatShift } from '../bits';
+import { formatAssignment, formatFormula, formatNucleus } from '../../utils/chemText';
 import { AiError, Caveats, RawOutput } from './shared';
 
 type VerifyResult = AiCallResult<AiVerifyPayload>;
@@ -175,7 +176,7 @@ function VerifyTable({ rows }: { rows: VerifyRow[] }) {
         <tbody className="divide-y divide-slate-100">
           {rows.map((r) => (
             <tr key={r.key}>
-              <td className="px-3 py-2 font-mono text-slate-600">{r.assignment || '—'}</td>
+              <td className="px-3 py-2 font-mono text-slate-600">{formatAssignment(r.assignment) || '—'}</td>
               <td className="px-3 py-2 text-slate-800">
                 {r.dataset ? (
                   <span className="inline-flex flex-wrap items-baseline gap-x-1.5">
@@ -344,7 +345,7 @@ export function SolventSignalsBlock({
         <div className="text-xs font-semibold text-slate-700">
           所选溶剂自身信号
           <span className="ml-1.5 font-normal text-slate-500">
-            {solvent.label} · {nucleus}
+            {formatFormula(solvent.label)} · {formatNucleus(nucleus)}
           </span>
         </div>
         {canAi && signals.length > 0 && (
@@ -360,7 +361,7 @@ export function SolventSignalsBlock({
 
       {!signals.length ? (
         <div className="text-[11px] text-slate-400">
-          该溶剂在文献中无 {nucleus} 数据
+          该溶剂在文献中无 {formatNucleus(nucleus)} 数据
           {refSignals.length ? '，以下为参考表值。' : '。'}
         </div>
       ) : (
@@ -528,7 +529,7 @@ function AiVerifyButtonInner({
               onRefresh={() => v.refreshOne(key)}
               header={
                 <>
-                  AI 文献值核验 · {label} · {nucleus}
+                  AI 文献值核验 · {formatFormula(label)} · {formatNucleus(nucleus)}
                   {derived && (
                     <span className="ml-1 text-slate-400">（该化合物在溶剂限定时取首个可用溶剂）</span>
                   )}
@@ -621,7 +622,7 @@ function SolventVerifyButtonInner({
                     onRefresh={() => v.refreshOne(n)}
                     header={
                       <>
-                        AI 文献值核验 · {label} · {n}
+                        AI 文献值核验 · {formatFormula(label)} · {formatNucleus(n)}
                       </>
                     }
                   />

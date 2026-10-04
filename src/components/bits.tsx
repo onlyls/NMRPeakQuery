@@ -2,6 +2,7 @@
  * bits.tsx — 结果展示用的共享小组件
  * ========================================================================== */
 import type { NMRSignal, SolventSignalKind, SourceId } from '../types/nmr';
+import { formatAssignment } from '../utils/chemText';
 
 export const SOURCE_META: Record<SourceId, { label: string; cls: string; title: string }> = {
   gottlieb1997: {
@@ -75,7 +76,7 @@ export function SignalRow({ signal, dim = false }: { signal: NMRSignal; dim?: bo
         </span>
         {signal.assignment && (
           <span className="rounded bg-slate-100 px-1.5 py-px font-mono text-[11px] text-slate-600">
-            {signal.assignment}
+            {formatAssignment(signal.assignment)}
           </span>
         )}
         {(signal.multiplicity || signal.multiplicityRaw) && (

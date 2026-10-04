@@ -26,6 +26,7 @@ NMRPeakQuery 面向合成化学、有机金属化学及工业分析等场景，�
 - **多峰协同匹配**：多个观测峰同时参与打分，输出命中 / 缺失 / 多余峰的统计，降低单峰误判。
 - **按名称 / CAS 查**：按化合物名称、中文名或 CAS 号检索，并展示跨溶剂位移对比。
 - **溶剂自身信号提示**：单峰命中时提示该峰是否只是残余质子峰、水峰或 ¹³C 溶剂峰。
+- **化学排版**：分子式、溶剂名与谱峰归属统一渲染为标准上下标（CDCl₃、(CD₃)₂CO、CH₃、¹H / ¹³C）；溶剂选择器以「名称 · 分子式」呈现，避免用括号包裹分子式时与其内建括号混淆。
 - **AI 助手（可选）**：数据集核验、实验方法解析（识别氘代溶剂并预测残留溶剂）、谱图核验与归属（谱图图片 + SMILES）。
 
 ### 界面预览
@@ -89,7 +90,7 @@ npm run dev:api    # wrangler pages dev dist --port 8788
 | `npm run preview` | 预览生产构建 |
 | `npm run data:extract` | 从文献 PDF 抽取数据 |
 | `npm run data:enrich` | 经 PubChem 补充 CAS / 分子式 / 分子量 / SMILES |
-| `npm run data:build` | 合并三来源，生成 `public/data/nmr_data_v1.json` |
+| `npm run data:build` | 合并各来源（四个一级文献 + 厂商参考表），生成 `public/data/nmr_data_v1.json` |
 | `npm run data:validate` | 校验数据集并输出覆盖统计 |
 
 ### 部署到 Cloudflare Pages
@@ -162,6 +163,7 @@ NMRPeakQuery is a browser-based tool for identifying residual solvent, water, an
 - **Multi-peak cooperative matching** with hit / missing / extra statistics
 - **Name / CAS search** with cross-solvent shift comparison
 - **Solvent self-signal hints** — residual, water, and ¹³C solvent peaks
+- **Chemical typography** — formulas, solvent names, and peak assignments render with proper sub/superscripts (CDCl₃, (CD₃)₂CO, CH₃, ¹H / ¹³C); the solvent selector shows “name · formula” so the formula is never confused with its own brackets
 - **Optional AI assistant** — dataset verification, method analysis, and spectrum assignment (image + SMILES)
 
 ### Data
