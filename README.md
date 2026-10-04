@@ -28,7 +28,19 @@ NMRPeakQuery 面向合成化学、有机金属化学及工业分析等场景，�
 - **溶剂自身信号提示**：单峰命中时提示该峰是否只是残余质子峰、水峰或 ¹³C 溶剂峰。
 - **AI 助手（可选）**：数据集核验、实验方法解析（识别氘代溶剂并预测残留溶剂）、谱图核验与归属（谱图图片 + SMILES）。
 
-![多峰协同匹配](screenshots/nmr-03-multipeak.png)
+### 界面预览
+
+| 溶剂自身信号提示 | 多峰协同匹配 |
+| :---: | :---: |
+| ![溶剂自身信号提示](screenshots/nmr-02-solvent-peak.png) | ![多峰协同匹配](screenshots/nmr-03-multipeak.png) |
+| **按名称 / CAS 查** | **跨溶剂对比（全部溶剂）** |
+| ![按名称 / CAS 查](screenshots/nmr-04-name-detail.png) | ![跨溶剂对比](screenshots/nmr-05-cross-solvent.png) |
+
+移动端已适配：
+
+| 移动端首页 | 移动端多峰匹配 |
+| :---: | :---: |
+| ![移动端首页](screenshots/mobile/m-01-home.png) | ![移动端多峰匹配](screenshots/mobile/m-03-multipeak.png) |
 
 ### 数据来源与合并规则
 
