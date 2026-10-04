@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-在线使用：**https://nmrpeakquery-public.pages.dev**（AI 助手需自带 Key，见 [AI 助手](#ai-助手)）
+在线使用：**[https://nmrpeakquery-public.pages.dev](https://nmrpeakquery-public.pages.dev)** · AI 助手需自带 Key（见 [AI 助手](#ai-助手)）
 
 [中文文档](#中文文档) · [English](#english)
 
@@ -150,7 +150,7 @@ src/                React 应用（组件、hooks、检索与 AI 逻辑）
 
 NMRPeakQuery is a browser-based tool for identifying residual solvent, water, and trace organic impurity peaks in NMR spectra, built on literature data from Gottlieb (1997), Fulmer (2010), and Babij (2016).
 
-**Live:** https://nmrpeakquery-public.pages.dev (AI assistant requires your own key, see [AI assistant](#ai-助手))
+**Live:** [https://nmrpeakquery-public.pages.dev](https://nmrpeakquery-public.pages.dev) — AI assistant requires your own key (BYOK only).
 
 ### Features
 
