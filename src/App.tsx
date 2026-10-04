@@ -201,7 +201,7 @@ export default function App() {
 
                   {mode === 'peak' ? (
                     shifts.length === 0 ? (
-                      <IntroPanel />
+                      <IntroPanel mode="peak" />
                     ) : peakResult.mode === 'single' ? (
                       <>
                         <ResultCount
@@ -238,7 +238,7 @@ export default function App() {
                       />
                     </>
                   ) : (
-                    <IntroPanel />
+                    <IntroPanel mode="name" />
                   )}
                 </section>
               </div>
@@ -302,19 +302,27 @@ function ResultCount({ text }: { text: string }) {
   return <div className="mb-2.5 text-xs font-medium text-slate-500">{text}</div>;
 }
 
-function IntroPanel() {
+const INTRO_COPY: Record<'peak' | 'name', { title: string; body: string }> = {
+  peak: {
+    title: '输入谱图上的峰位，反查可能的杂质',
+    body: '选择所用氘代溶剂与核素，把可疑峰的化学位移填入左侧。数据覆盖 12 种氘代溶剂、87 种常见溶剂残留 / 痕量杂质，同时会提示残余质子峰、水峰与 ¹³C 溶剂峰，避免把溶剂自身信号误判为杂质。',
+  },
+  name: {
+    title: '输入化合物名称、中文名或 CAS 号，查看其核磁信号',
+    body: '在左侧输入中英文名或 CAS 号，按名称检索 87 种常见溶剂残留 / 痕量杂质，展开即可对照该化合物在 12 种氘代溶剂下的 ¹H / ¹³C 化学位移与峰形归属。',
+  },
+};
+
+function IntroPanel({ mode }: { mode: 'peak' | 'name' }) {
+  const { title, body } = INTRO_COPY[mode];
   return (
     <div className="rounded-lg border border-dashed border-slate-300 bg-white/70 px-6 py-12">
       <div className="mx-auto max-w-md space-y-4 text-center">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-sky-50 text-sky-600">
           <FlaskConical className="h-6 w-6" />
         </div>
-        <h2 className="text-base font-semibold text-slate-800">输入谱图上的峰位，反查可能的杂质</h2>
-        <p className="text-sm leading-relaxed text-slate-500">
-          选择所用氘代溶剂与核素，把可疑峰的化学位移填入左侧。数据覆盖 12 种氘代溶剂、
-          87 种常见溶剂残留 / 痕量杂质，同时会提示残余质子峰、水峰与 ¹³C 溶剂峰，
-          避免把溶剂自身信号误判为杂质。
-        </p>
+        <h2 className="text-base font-semibold text-slate-800">{title}</h2>
+        <p className="text-sm leading-relaxed text-slate-500">{body}</p>
       </div>
     </div>
   );
