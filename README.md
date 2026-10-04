@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-在线使用：**https://nmrpeakquery-public.pages.dev**
+在线使用：**https://nmrpeakquery-public.pages.dev**（AI 助手需自带 Key，见 [AI 助手](#ai-助手)）
 
 [中文文档](#中文文档) · [English](#english)
 
@@ -90,10 +90,21 @@ npm run dev:api    # wrangler pages dev dist --port 8788
 
 ### 部署到 Cloudflare Pages
 
+支持**同一仓库部署两个 Pages 项目**，用于隔离「含云端 Key 的私有版」与「公开版」：
+
+| 项目 | 环境变量 | 用途 |
+| --- | --- | --- |
+| 私有版 | 配置 `AI_*` | 自用，云端 Key 仅在此生效 |
+| 公开版 | **不配置任何 `AI_*`** | 面向他人，只能自行填 BYOK Key |
+
+两个项目连接同一仓库、构建配置相同；公开版因无环境变量，`/api/ai/status` 恒返回「未配置」、`/api/ai/chat` 直接返回 503，云端 Key 不会被他人调用。
+
+单个项目的部署步骤：
+
 1. 连接本仓库，构建配置：**Build command** `npm run build`、**Build output directory** `dist`；
 2. `functions/` 目录会被自动识别为 Pages Functions；
-3. 在 **Settings → Variables and Secrets** 配置环境变量（**Production** 环境），修改后需重新部署才生效；
-4. 在 **Custom domains** 添加自定义域名。
+3. 在 **Settings → Variables and Secrets** 配置环境变量（**Production** 环境），修改后需重新部署才生效；**公开版请全部留空**；
+4. 在 **Custom domains** 添加自定义域名；公开版可直接使用默认的 `<项目名>.pages.dev`，无需额外 DNS 配置。
 
 ### 环境变量
 
@@ -139,7 +150,7 @@ src/                React 应用（组件、hooks、检索与 AI 逻辑）
 
 NMRPeakQuery is a browser-based tool for identifying residual solvent, water, and trace organic impurity peaks in NMR spectra, built on literature data from Gottlieb (1997), Fulmer (2010), and Babij (2016).
 
-**Live:** https://nmrpeakquery-public.pages.dev
+**Live:** https://nmrpeakquery-public.pages.dev (AI assistant requires your own key, see [AI assistant](#ai-助手))
 
 ### Features
 
@@ -171,6 +182,8 @@ npm run dev:api    # run Cloudflare Pages Functions locally (after build)
 ### Deployment
 
 Deploy on Cloudflare Pages with build command `npm run build` and output directory `dist`. Set `AI_BASE_URL`, `AI_API_KEY`, and `AI_MODEL` (plus optional `AI_VISION_MODEL`) as **Production** environment variables, then redeploy for changes to take effect.
+
+The same repo can back two Pages projects: a **private** one with `AI_*` set for cloud AI, and a **public** one with no `AI_*` variables so the cloud key can never be used by others (BYOK only). Both share the same build settings.
 
 ### License
 
