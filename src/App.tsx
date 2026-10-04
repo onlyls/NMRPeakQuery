@@ -60,6 +60,21 @@ export default function App() {
 
   return (
     <div className="min-h-screen">
+      {/* AI VibeCoding 标识：置于页面最顶部，说明本项目由 AI 辅助开发 */}
+      <div className="border-b border-slate-200/70 bg-gradient-to-r from-sky-50 via-violet-50 to-fuchsia-50">
+        <div className="mx-auto flex max-w-6xl items-center justify-center px-4 py-1.5 sm:px-6">
+          <span
+            title="本项目由 AI VibeCoding 开发"
+            className="inline-flex items-center gap-1.5 rounded-full bg-white/70 px-3 py-0.5 text-[11px] font-medium ring-1 ring-inset ring-slate-200/80 backdrop-blur-sm"
+          >
+            <Sparkles className="h-3 w-3 text-violet-500" />
+            <span className="bg-gradient-to-r from-sky-600 via-violet-600 to-fuchsia-600 bg-clip-text tracking-wide text-transparent">
+              DeepSeek-V4.1-Flash TraeCode
+            </span>
+          </span>
+        </div>
+      </div>
+
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-4 sm:px-6">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-600 text-white">
