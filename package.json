@@ -8,6 +8,7 @@
     "dev:api": "wrangler pages dev dist --port 8788 --compatibility-date=2026-10-04",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
+    "build:offline": "node scripts/build-offline.mjs",
     "data:extract": "node scripts/extract-pdf.mjs",
     "data:enrich": "node scripts/enrich-pubchem.mjs",
     "data:build": "node scripts/build-dataset.mjs",

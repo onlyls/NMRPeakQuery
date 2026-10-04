@@ -1,6 +1,8 @@
 node_modules
 dist
 dist-ssr
+release
+.offline-tmp
 scripts/.cache
 .wrangler
 .dev.vars
