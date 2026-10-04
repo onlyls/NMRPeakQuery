@@ -68,7 +68,7 @@ export default function App() {
           <div>
             <h1 className="text-lg font-semibold tracking-tight text-slate-900">NMRPeakQuery</h1>
             <p className="text-xs text-slate-500">
-              核磁残余溶剂与痕量杂质峰查询 · Gottlieb 1997 / Fulmer 2010 / Babij 2016
+              核磁残余溶剂与痕量杂质峰查询 · Gottlieb 1997 / Fulmer 2010 / Babij 2016 / Cseri 2023
             </p>
           </div>
           <a
@@ -251,20 +251,46 @@ export default function App() {
         <div className="mx-auto max-w-6xl space-y-2 px-4 py-6 text-[11px] leading-relaxed text-slate-400 sm:px-6">
           <div className="flex flex-wrap gap-x-4 gap-y-1">
             {(Object.keys(SOURCE_META) as (keyof typeof SOURCE_META)[]).map((id) => {
-              const doi = dataset?.meta.sources.find((s) => s.id === id)?.doi;
-              return doi ? (
-                <a
-                  key={id}
-                  href={`https://doi.org/${doi}`}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  title={`打开原文：https://doi.org/${doi}`}
-                  className="inline-flex items-center gap-1 transition hover:text-sky-600 hover:underline"
-                >
-                  <Beaker className="h-3 w-3" />
-                  {SOURCE_META[id].title}
-                </a>
-              ) : (
+              const src = dataset?.meta.sources.find((s) => s.id === id);
+              const doi = src?.doi;
+              const urls = src?.urls ?? [];
+              if (doi) {
+                return (
+                  <a
+                    key={id}
+                    href={`https://doi.org/${doi}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    title={`打开原文：https://doi.org/${doi}`}
+                    className="inline-flex items-center gap-1 transition hover:text-sky-600 hover:underline"
+                  >
+                    <Beaker className="h-3 w-3" />
+                    {SOURCE_META[id].title}
+                  </a>
+                );
+              }
+              if (urls.length) {
+                return (
+                  <span key={id} className="inline-flex flex-wrap items-center gap-1">
+                    <Beaker className="h-3 w-3" />
+                    {urls.map((u, i) => (
+                      <span key={u.href} className="inline-flex items-center gap-1">
+                        {i > 0 && <span className="text-slate-300">·</span>}
+                        <a
+                          href={u.href}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          title={`打开：${u.href}`}
+                          className="transition hover:text-sky-600 hover:underline"
+                        >
+                          {u.label}
+                        </a>
+                      </span>
+                    ))}
+                  </span>
+                );
+              }
+              return (
                 <span key={id} className="inline-flex items-center gap-1">
                   <Beaker className="h-3 w-3" />
                   {SOURCE_META[id].title}
@@ -282,9 +308,9 @@ export default function App() {
               <Download className="h-3 w-3" />
               数据集 v{dataset?.meta.version ?? '1.0.0'}
             </a>{' '}
-            · {dataset?.meta.counts.compounds ?? 87} 个化合物 /{' '}
-            {dataset?.meta.counts.signals ?? 0} 条信号 · 冲突值按 2016 {'>'} 2010 {'>'} 1997 取优先级，
-            被覆盖的历史值保留在信号的 superseded 记录中。
+            · {dataset?.meta.counts.compounds ?? 153} 个化合物 /{' '}
+            {dataset?.meta.counts.signals ?? 0} 条信号 · 冲突值按 2016 {'>'} 2010 {'>'} 1997
+            取优先级（2023 数据仅在旧源未收录时补充），被覆盖的历史值保留在信号的 superseded 记录中。
           </div>
           <div className="flex items-center gap-1">
             <Info className="h-3 w-3" />
@@ -305,11 +331,11 @@ function ResultCount({ text }: { text: string }) {
 const INTRO_COPY: Record<'peak' | 'name', { title: string; body: string }> = {
   peak: {
     title: '输入谱图上的峰位，反查可能的杂质',
-    body: '选择所用氘代溶剂与核素，把可疑峰的化学位移填入左侧。数据覆盖 12 种氘代溶剂、87 种常见溶剂残留 / 痕量杂质，同时会提示残余质子峰、水峰与 ¹³C 溶剂峰，避免把溶剂自身信号误判为杂质。',
+    body: '选择所用氘代溶剂与核素，把可疑峰的化学位移填入左侧。数据覆盖 12 种氘代溶剂、153 种常见溶剂残留 / 痕量杂质，同时会提示残余质子峰、水峰与 ¹³C 溶剂峰，避免把溶剂自身信号误判为杂质。',
   },
   name: {
     title: '输入化合物名称、中文名或 CAS 号，查看其核磁信号',
-    body: '在左侧输入中英文名或 CAS 号，按名称检索 87 种常见溶剂残留 / 痕量杂质，展开即可对照该化合物在 12 种氘代溶剂下的 ¹H / ¹³C 化学位移与峰形归属。',
+    body: '在左侧输入中英文名或 CAS 号，按名称检索 153 种常见溶剂残留 / 痕量杂质，展开即可对照该化合物在 12 种氘代溶剂下的 ¹H / ¹³C 化学位移与峰形归属。',
   },
 };
 

@@ -52,7 +52,7 @@ export default function MethodAnalyzer() {
     <div className="space-y-4">
       <p className="text-xs leading-relaxed text-slate-500">
         粘贴实验方法（Experimental Section）文本片段，AI 将识别其中测试核磁所用的氘代溶剂，
-        并预测可能残留的溶剂；随后用本地文献数据（Gottlieb 1997 / Fulmer 2010 / Babij 2016）
+        并预测可能残留的溶剂；随后用本地文献数据（Gottlieb 1997 / Fulmer 2010 / Babij 2016 / Cseri 2023）
         交叉列出这些溶剂的真实峰位。AI 识别结果仅供参考。
       </p>
 

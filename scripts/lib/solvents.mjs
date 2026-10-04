@@ -1,9 +1,9 @@
 /**
  * scripts/lib/solvents.mjs
  *
- * 12 种氘代溶剂的规范定义与别名归一。
+ * 氘代溶剂的规范定义与别名归一（12 种一级文献溶剂 + 9 种仅参考表溶剂）。
  *
- * 三篇文献对同一溶剂的写法互不相同，且 PDF 文本层会把下标拆开
+ * 各来源文献对同一溶剂的写法互不相同，且 PDF 文本层会把下标拆开
  * （"CD3CN" → "CD 3 CN"，"(CD3)2CO" → "(CD 3 ) 2 CO"，"THF-d8" → "THF- d 8"）。
  * 因此所有别名匹配统一先做 normalizeToken()（去空白 + 统一连字符 + 小写），
  * 再与别名索引比对。
@@ -98,6 +98,72 @@ export const SOLVENTS = [
     label: 'TFE-d3',
     formula: 'CF3CD2OD',
     aliases: ['TFE-d3', 'trifluoroethanol-d3', '2,2,2-trifluoroethanol-d3'],
+  },
+
+  // ---- 以下 9 种一级文献未覆盖，仅由溶剂参考表（三级来源）提供数据 ----
+  // 它们没有化合物位移数据（referenceOnly），仅用于识别溶剂自身峰 / 查询物理性质。
+  {
+    id: 'acoh_d4',
+    label: 'Acetic acid-d4',
+    formula: 'CD3COOD',
+    aliases: ['acetic acid-d4', 'CD3COOD', 'aceticacid-d4', 'perdeuterioacetic acid'],
+    referenceOnly: true,
+  },
+  {
+    id: 'cyclohexane_d12',
+    label: 'Cyclohexane-d12',
+    formula: 'C6D12',
+    aliases: ['cyclohexane-d12', 'cyclohexaned12', 'C6D12'],
+    referenceOnly: true,
+  },
+  {
+    id: 'dmf_d7',
+    label: 'DMF-d7',
+    formula: '(CD3)2NCDO',
+    aliases: ['DMF-d7', 'N,N-dimethylformamide-d7', 'dimethylformamide-d7'],
+    referenceOnly: true,
+  },
+  {
+    id: 'dioxane_d8',
+    label: '1,4-Dioxane-d8',
+    formula: 'C4D8O2',
+    aliases: ['1,4-dioxane-d8', 'dioxane-d8', 'p-dioxane-d8', 'dioxaned8'],
+    referenceOnly: true,
+  },
+  {
+    id: 'ethanol_d6',
+    label: 'Ethanol-d6',
+    formula: 'C2D5OD',
+    aliases: ['ethanol-d6', 'ethanold6', 'C2D5OD'],
+    referenceOnly: true,
+  },
+  {
+    id: 'isopropanol_d8',
+    label: '2-Propanol-d8',
+    formula: '(CD3)2CDOD',
+    aliases: ['2-propanol-d8', 'isopropanol-d8', 'i-propanol-d8', '2propanol-d8'],
+    referenceOnly: true,
+  },
+  {
+    id: 'pyridine_d5',
+    label: 'Pyridine-d5',
+    formula: 'C5D5N',
+    aliases: ['pyridine-d5', 'pyridined5', 'C5D5N', 'perdeuteriopyridine'],
+    referenceOnly: true,
+  },
+  {
+    id: 'tfa_d',
+    label: 'TFA-d',
+    formula: 'CF3COOD',
+    aliases: ['TFA-d', 'trifluoroacetic acid-d', 'trifluoroaceticacid-d', 'CF3COOD'],
+    referenceOnly: true,
+  },
+  {
+    id: 'tetrachloroethane_d2',
+    label: '1,1,2,2-Tetrachloroethane-d2',
+    formula: 'C2D2Cl4',
+    aliases: ['1,1,2,2-tetrachloroethane-d2', 'tetrachloroethane-d2', 'tetrachloroethaned2'],
+    referenceOnly: true,
   },
 ];
 

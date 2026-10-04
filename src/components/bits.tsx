@@ -19,6 +19,16 @@ export const SOURCE_META: Record<SourceId, { label: string; cls: string; title: 
     cls: 'bg-sky-50 text-sky-700 ring-sky-200',
     title: 'Babij et al., Org. Process Res. Dev. 2016 (SI)',
   },
+  cseri2023: {
+    label: '2023',
+    cls: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
+    title: 'Cseri et al., ACS Sustainable Chem. Eng. 2023 (SI, Part 4)',
+  },
+  solventReference: {
+    label: '参考表',
+    cls: 'bg-violet-50 text-violet-700 ring-violet-200',
+    title: 'Sigma-Aldrich 氘代溶剂性质参考表 / 杂质化学位移表（厂商参考表，三级来源，非一级文献）',
+  },
 };
 
 export function SourceBadge({ source }: { source: SourceId }) {

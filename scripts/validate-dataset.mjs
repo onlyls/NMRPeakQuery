@@ -25,11 +25,12 @@ const warn = (m) => warnings.push(m);
 
 /* -------------------------------- 1. 计数门 ------------------------------- */
 
-/** 已人工核对过的解析基线（来自三篇文献原文 / SI） */
+/** 已人工核对过的解析基线（来自各篇文献原文 / SI） */
 const PARSED_BASELINE = {
   gottlieb1997: { compounds: 34, rows: 845 },
   fulmer2010: { compounds: 57, rows: 2671 },
   babij2016: { compounds: 51, rows: 1707 },
+  cseri2023: { compounds: 140, rows: 7347 },
 };
 
 for (const [id, expect] of Object.entries(PARSED_BASELINE)) {
@@ -177,7 +178,18 @@ for (const id of Object.keys(PARSED_BASELINE)) {
  * 这里只做「有没有补上、补得对不对」的核对：全部是 warning 级，
  * 因为缺中文名 / 缺 CAS 属正常（PubChem 本身未必收录），不影响数据集可用。
  */
-const noEnrichSet = new Set(['pump-oil', 'silicone-grease', 'apiezon-h-grease']);
+const noEnrichSet = new Set([
+  'pump-oil',
+  'silicone-grease',
+  'apiezon-h-grease',
+  // 2023 新增的聚合物 / 混合物 / 商品名，PubChem 无单一 CID
+  'peg400',
+  'ppg400',
+  'priamine1071',
+  'tpgs-750-m',
+  'methylsoyate',
+  'reline',
+]);
 let enriched = 0;
 const missingExternal = [];
 const missingChinese = [];

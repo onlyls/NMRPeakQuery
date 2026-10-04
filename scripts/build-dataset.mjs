@@ -1,17 +1,19 @@
 /**
  * scripts/build-dataset.mjs
  *
- * 把三个来源的归一化结果合并成单一自包含数据集：
+ * 把四个来源的归一化结果合并成单一自包含数据集：
  *   scripts/.cache/normalized-gottlieb1997.json
  *   scripts/.cache/normalized-fulmer2010.json
  *   scripts/.cache/normalized-babij2016.json
+ *   scripts/.cache/normalized-cseri2023.json
  *        ↓
  *   public/data/nmr_data_v1.json
  *
  * 三条合并规则：
  *   1. 化合物 / 溶剂命名不一致 —— 由 lib/compounds.mjs、lib/solvents.mjs 归一，
  *      合并时只认规范 ID，不认原始写法。
- *   2. 冲突值 —— 按 PRECEDENCE（babij2016 > fulmer2010 > gottlieb1997）取高优先级；
+ *   2. 冲突值 —— 按 PRECEDENCE（babij2016 > fulmer2010 > gottlieb1997 > cseri2023）
+ *      取高优先级；2023 仅作补充，只在其独有的化合物/溶剂组合上成为主数据；
  *      低优先级的值不丢弃，写进该信号的 superseded[]。
  *      同一 (化合物, 溶剂, 核) 下，低优先级来源「多出来」的信号会被并入，
  *      并标注其自身来源（提升召回，不牺牲可追溯性）。
@@ -24,6 +26,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SOLVENTS, buildSolventAliasMap } from './lib/solvents.mjs';
+import { SOLVENT_REFERENCE, SOLVENT_REFERENCE_SOURCE } from './lib/solvent-reference.mjs';
 import { resolveCompound, normalizeName, COMPOUND_ALIAS_INDEX, COMPOUND_CHINESE } from './lib/compounds.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -33,8 +36,13 @@ const OUT_FILE = path.join(ROOT, 'public', 'data', 'nmr_data_v1.json');
 /** PubChem 富集缓存（由 scripts/enrich-pubchem.mjs 生成）；不存在则跳过富集 */
 const PUBCHEM_CACHE = path.join(CACHE, 'pubchem.json');
 
-/** 冲突时取值的优先级（高 → 低） */
-const PRECEDENCE = ['babij2016', 'fulmer2010', 'gottlieb1997'];
+/**
+ * 冲突时取值的优先级（高 → 低）。
+ * 1997/2010/2016 同属「常见溶剂痕量位移」表的延续，互为对照且归属标注规整，
+ * 故沿用旧源为主；2023 覆盖面更广，但归属改用位次标注（H1/H2…，意义不明），
+ * 仅作补充：只在其独有的化合物/溶剂组合上成为主数据。
+ */
+const PRECEDENCE = ['babij2016', 'fulmer2010', 'gottlieb1997', 'cseri2023'];
 const RANK = Object.fromEntries(PRECEDENCE.map((s, i) => [s, i]));
 
 /** 判定「两个来源报的是同一个信号」的位移容差（同溶剂、同核素内比较） */
@@ -107,13 +115,38 @@ for (const [key, sig] of solventSignalIndex) {
 }
 for (const arr of solventSignals.values()) arr.sort((a, b) => a.shift - b.shift);
 
-const solvents = SOLVENTS.map((s) => ({
-  id: s.id,
-  label: s.label,
-  formula: s.formula,
-  aliases: s.aliases,
-  signals: solventSignals.get(s.id) ?? [],
-}));
+/**
+ * 溶剂定义 + 文献溶剂自身信号 + 参考表数据（物理性质 / 参考溶剂峰）。
+ * 注意：referenceSignals 与 signals 分开存放 —— 参考表与一级文献口径不同
+ * （如 CDCl3 残余峰参考表 7.24 vs 文献 7.26），参考值仅展示、不参与检索与合并。
+ */
+const solvents = SOLVENTS.map((s) => {
+  const ref = SOLVENT_REFERENCE[s.id];
+  const meta = {
+    id: s.id,
+    label: s.label,
+    formula: s.formula,
+    aliases: s.aliases,
+    signals: solventSignals.get(s.id) ?? [],
+  };
+  if (s.referenceOnly) meta.referenceOnly = true;
+  if (ref) {
+    meta.properties = {
+      ...(ref.cas ? { cas: ref.cas } : {}),
+      ...(Number.isFinite(ref.mw) ? { mw: ref.mw } : {}),
+      ...(Number.isFinite(ref.density) ? { density: ref.density } : {}),
+      ...(Number.isFinite(ref.meltingPoint) ? { meltingPoint: ref.meltingPoint } : {}),
+      ...(Number.isFinite(ref.boilingPoint) ? { boilingPoint: ref.boilingPoint } : {}),
+      ...(Number.isFinite(ref.dielectricConstant)
+        ? { dielectricConstant: ref.dielectricConstant }
+        : {}),
+      ...(ref.physicalNote ? { physicalNote: ref.physicalNote } : {}),
+      source: SOLVENT_REFERENCE_SOURCE.id,
+    };
+    meta.referenceSignals = ref.signals;
+  }
+  return meta;
+});
 
 /* --------------------------------- 化合物 -------------------------------- */
 
@@ -365,12 +398,17 @@ for (const c of compounds) {
     }
   }
 }
+// 参考表的溶剂自身信号单列计数（不参与化合物信号统计）
+bySource[SOLVENT_REFERENCE_SOURCE.id] = solvents.reduce(
+  (n, s) => n + (s.referenceSignals?.length ?? 0),
+  0,
+);
 
 const dataset = {
   meta: {
-    version: '1.0.0',
+    version: '1.2.0',
     generatedAt: new Date().toISOString(),
-    sources: sources.map((s) => s.info),
+    sources: [...sources.map((s) => s.info), SOLVENT_REFERENCE_SOURCE],
     precedence: PRECEDENCE,
     corrections,
     solventAliases: buildSolventAliasMap(),
@@ -403,6 +441,10 @@ const singleSource = compounds.filter((c) => {
 
 console.log(`[build] 输出 ${path.relative(ROOT, OUT_FILE)}`);
 console.log(`[build] 溶剂 ${solvents.length} 种，其中含自身信号的 ${[...solventSignals.keys()].length} 种`);
+console.log(
+  `[build] 溶剂参考表覆盖 ${solvents.filter((s) => s.referenceSignals?.length).length} 种，` +
+    `含物理性质 ${solvents.filter((s) => s.properties).length} 种`,
+);
 console.log(
   `[build] 化合物 ${compounds.length} 个，信号 ${signalCount} 条（¹H/¹³C 合计，不含溶剂自身信号）`,
 );

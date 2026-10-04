@@ -231,7 +231,11 @@ export function searchByName(keyword: string, limit = 50): NameHit[] {
 
 /* ------------------------------ 溶剂自身峰提示 ----------------------------- */
 
-/** 溶剂自身信号（残余质子 / 水 / 13C 溶剂峰）在容差内的命中 */
+/**
+ * 溶剂自身信号（残余质子 / 水 / 13C 溶剂峰）在容差内的命中。
+ * 优先使用文献值；文献未命中时，退回参考表值（referenceSignals，标注为 solventReference）。
+ * 这样对仅有参考数据的 9 种溶剂（referenceOnly）也能给出溶剂峰提示。
+ */
 export function findSolventSignals(
   solventId: SolventId,
   nucleus: NucleusType,
@@ -240,13 +244,28 @@ export function findSolventSignals(
 ): (SolventSignal & { deviation: number })[] {
   const solvent = solventMap.get(solventId);
   if (!solvent) return [];
-  return solvent.signals
-    .filter((s) => s.nucleus === nucleus)
-    .map((s) => {
-      const [lo, hi] = s.shiftRange ?? [s.shift, s.shift];
-      const dev = shift < lo ? lo - shift : shift > hi ? shift - hi : 0;
-      return { ...s, deviation: dev };
-    })
-    .filter((s) => s.deviation <= tolerance)
-    .sort((a, b) => a.deviation - b.deviation);
+
+  const within = (list: SolventSignal[]) =>
+    list
+      .filter((s) => s.nucleus === nucleus)
+      .map((s) => {
+        const [lo, hi] = s.shiftRange ?? [s.shift, s.shift];
+        const dev = shift < lo ? lo - shift : shift > hi ? shift - hi : 0;
+        return { ...s, deviation: dev };
+      })
+      .filter((s) => s.deviation <= tolerance)
+      .sort((a, b) => a.deviation - b.deviation);
+
+  const litHits = within(solvent.signals);
+  if (litHits.length) return litHits;
+
+  const refAsSignals: SolventSignal[] = (solvent.referenceSignals ?? []).map((r) => ({
+    kind: r.kind,
+    nucleus: r.nucleus,
+    shift: r.shift,
+    ...(r.multiplicity ? { multiplicity: r.multiplicity } : {}),
+    ...(r.coupling?.length ? { coupling: r.coupling } : {}),
+    source: 'solventReference',
+  }));
+  return within(refAsSignals);
 }

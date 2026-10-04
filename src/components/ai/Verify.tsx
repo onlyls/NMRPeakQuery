@@ -286,6 +286,31 @@ export function SolventSignalsBlock({
     [signals],
   );
 
+  /** 参考表的溶剂峰（三级来源，单独展示，不与文献值合并） */
+  const refSignals = useMemo(
+    () =>
+      solvent
+        ? [...(solvent.referenceSignals ?? [])]
+            .filter((s) => s.nucleus === nucleus)
+            .sort((a, b) => KIND_ORDER[a.kind] - KIND_ORDER[b.kind])
+        : [],
+    [solvent, nucleus],
+  );
+
+  /** 溶剂物理性质（来自参考表） */
+  const propItems = useMemo(() => {
+    const p = solvent?.properties;
+    if (!p) return [] as string[];
+    const items: string[] = [];
+    if (p.cas) items.push(`CAS ${p.cas}`);
+    if (Number.isFinite(p.mw)) items.push(`MW ${p.mw}`);
+    if (Number.isFinite(p.density)) items.push(`密度 ${p.density} g/mL`);
+    if (Number.isFinite(p.meltingPoint)) items.push(`mp ${p.meltingPoint} °C`);
+    if (Number.isFinite(p.boilingPoint)) items.push(`bp ${p.boilingPoint} °C`);
+    if (Number.isFinite(p.dielectricConstant)) items.push(`ε ${p.dielectricConstant}`);
+    return items;
+  }, [solvent]);
+
   const key = nucleus as string;
   const v = useVerify({
     [key]: (bypassCache) => {
@@ -334,7 +359,10 @@ export function SolventSignalsBlock({
       </div>
 
       {!signals.length ? (
-        <div className="text-[11px] text-slate-400">该溶剂在 {nucleus} 下无本地信号。</div>
+        <div className="text-[11px] text-slate-400">
+          该溶剂在文献中无 {nucleus} 数据
+          {refSignals.length ? '，以下为参考表值。' : '。'}
+        </div>
       ) : (
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
           {sorted.map((s, i) => (
@@ -352,6 +380,36 @@ export function SolventSignalsBlock({
               {s.temperatureNote && <span className="text-[10px] text-slate-400">{s.temperatureNote}</span>}
             </div>
           ))}
+        </div>
+      )}
+
+      {refSignals.length > 0 && (
+        <div className="mt-2 rounded-md bg-slate-50 px-2 py-1.5">
+          <div className="mb-1 text-[10px] font-medium text-slate-500">
+            参考值 · 厂商参考表（口径可能与文献不同，如 CDCl₃ 残余峰 7.24 vs 文献 7.26）
+          </div>
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            {refSignals.map((s, i) => (
+              <div key={i} className="inline-flex flex-wrap items-baseline gap-x-1.5 text-xs">
+                <span className="rounded bg-violet-50 px-1.5 py-px text-[10px] text-violet-600">
+                  {SOLVENT_SIGNAL_KIND_LABEL[s.kind]}
+                </span>
+                <span className="font-mono font-semibold text-slate-700">δ {s.shift}</span>
+                {s.multiplicity && <span className="text-slate-500">{s.multiplicity}</span>}
+                {s.coupling?.length ? <span className="text-slate-500">{jText(s.coupling)}</span> : null}
+                {s.note && <span className="text-[10px] text-slate-400">{s.note}</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {propItems.length > 0 && (
+        <div className="mt-2 border-t border-slate-100 pt-1.5 text-[11px] text-slate-500">
+          {propItems.join(' · ')}
+          {solvent.properties?.physicalNote && (
+            <span className="text-slate-400">（{solvent.properties.physicalNote}）</span>
+          )}
         </div>
       )}
 

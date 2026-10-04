@@ -1,6 +1,6 @@
 # NMRPeakQuery
 
-> 核磁残余溶剂与痕量杂质峰查询工具 · 基于 Gottlieb (1997) / Fulmer (2010) / Babij (2016) 文献数据
+> 核磁残余溶剂与痕量杂质峰查询工具 · 基于 Gottlieb (1997) / Fulmer (2010) / Babij (2016) / Cseri (2023) 文献数据
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
@@ -18,7 +18,7 @@
 
 NMRPeakQuery 面向合成化学、有机金属化学及工业分析等场景，用于快速识别核磁谱图中的**残余溶剂峰、水峰与痕量有机杂质峰**。位移匹配与打分全部在浏览器内存中完成，无后端数据库、无网络往返，查询近乎即时。
 
-数据规模：**12 种氘代溶剂 · 87 个化合物 · 3924 条化学位移信号**。
+数据规模：**21 种氘代溶剂 · 153 个化合物 · 8868 条化学位移信号**（其中 12 种溶剂含一级文献化合物数据，另 9 种仅提供溶剂自身峰与物理性质参考值）。
 
 ### 功能
 
@@ -49,13 +49,17 @@ NMRPeakQuery 面向合成化学、有机金属化学及工业分析等场景，�
 | Babij 2016 · *Org. Process Res. Dev.* · [10.1021/acs.oprd.5b00417](https://doi.org/10.1021/acs.oprd.5b00417) | Supporting Information, Tables S1–S12 | 1705 |
 | Fulmer 2010 · *Organometallics* · [10.1021/om100106e](https://doi.org/10.1021/om100106e) | Supporting Information, Table S1 / S2 | 2208 |
 | Gottlieb 1997 · *J. Org. Chem.* · [10.1021/jo971176v](https://doi.org/10.1021/jo971176v) | Tables 1 / 2 | 11 |
+| Cseri 2023 · *ACS Sustainable Chem. Eng.* · [10.1021/acssuschemeng.3c00244](https://doi.org/10.1021/acssuschemeng.3c00244)（补充） | Supporting Information, Part 4 (pp.15–201) | 4944 |
+| Sigma-Aldrich 厂商参考表（补充） | [氘代溶剂性质参考表](https://www.sigmaaldrich.cn/CN/en/technical-documents/technical-article/analytical-chemistry/nuclear-magnetic-resonance/nmr-deuterated-solvent-properties-reference) · [杂质化学位移表](https://www.sigmaaldrich.cn/CN/en/technical-documents/technical-article/analytical-chemistry/nuclear-magnetic-resonance/1h-nmr-and-13c-nmr-chemical-shifts-of-impurities-chart) | 溶剂峰参考值（不计入化合物信号统计） |
 
 合并规则：
 
 - 溶剂以 12 个规范 `SolventId` 为主键，各来源的别名经 `normalizeToken()` 归一后映射；
 - 化合物**仅在已确认同义组内合并**，不自动推断等价；
-- 冲突值优先级 **Babij 2016 > Fulmer 2010 > Gottlieb 1997**（新文献测量条件更贴近现代），被覆盖的旧值保留在 `superseded` 字段；
-- Fulmer 2010 SI 的 *Corrections and Comments* 修订逐条记录于 `meta.corrections`，保证可追溯。
+- 冲突值优先级 **Babij 2016 > Fulmer 2010 > Gottlieb 1997**（三者同属「常见溶剂痕量位移」表的延续，归属标注规整，互为对照）；被覆盖的旧值保留在 `superseded` 字段；
+- **Cseri 2023 仅作补充**：只在旧源未收录的化合物/溶剂组合上提供数据（覆盖 8 种氘代溶剂、大量新兴绿色溶剂/酸/碱）。其归属沿用原文的位次标注（H1/H2…），语义弱于旧源的 CH(2,6) 类归属，故不与旧源争主；
+- Fulmer 2010 SI 的 *Corrections and Comments* 修订逐条记录于 `meta.corrections`，保证可追溯；
+- **厂商参考表**（Sigma-Aldrich / CIL）单独存放于 `SolventMeta.referenceSignals`，与一级文献值分开——两者口径不同（如 CDCl₃ 残余峰参考表 7.24 vs 文献 7.26），参考值仅展示、不参与合并；其中 9 种溶剂（含 **Pyridine-d5**）仅由此表覆盖。
 
 ### 技术栈
 
@@ -138,17 +142,17 @@ src/                React 应用（组件、hooks、检索与 AI 逻辑）
 
 ### 数据出处与免责声明
 
-数据整理自上述三篇文献。结果仅供结构解析辅助参考，**不作为定量依据**，使用前请与原文核对。PubChem 仅用于补充 CAS、分子式、分子量、SMILES 等标识字段。
+数据整理自上述四篇文献。结果仅供结构解析辅助参考，**不作为定量依据**，使用前请与原文核对。PubChem 仅用于补充 CAS、分子式、分子量、SMILES 等标识字段。
 
 ### 许可
 
-代码以 [MIT](LICENSE) 许可开源。数据集的版权归属三篇原始文献，使用或再分发时请一并引用原文。
+代码以 [MIT](LICENSE) 许可开源。数据集的版权归属四篇原始文献，使用或再分发时请一并引用原文。
 
 ---
 
 ## English
 
-NMRPeakQuery is a browser-based tool for identifying residual solvent, water, and trace organic impurity peaks in NMR spectra, built on literature data from Gottlieb (1997), Fulmer (2010), and Babij (2016).
+NMRPeakQuery is a browser-based tool for identifying residual solvent, water, and trace organic impurity peaks in NMR spectra, built on literature data from Gottlieb (1997), Fulmer (2010), Babij (2016), and Cseri (2023).
 
 **Live:** [https://nmrpeakquery-public.pages.dev](https://nmrpeakquery-public.pages.dev) — AI assistant requires your own key (BYOK only).
 
@@ -162,7 +166,7 @@ NMRPeakQuery is a browser-based tool for identifying residual solvent, water, an
 
 ### Data
 
-12 deuterated solvents · 87 compounds · 3,924 signals, merged with precedence **Babij 2016 > Fulmer 2010 > Gottlieb 1997**. Corrections and superseded values are preserved in the dataset for full traceability.
+21 deuterated solvents (12 with literature compound data, 9 with vendor reference values only) · 153 compounds · 8,868 signals, merged with precedence **Babij 2016 > Fulmer 2010 > Gottlieb 1997**; Cseri 2023 is a supplementary source (fills in compound/solvent combinations not covered by the older sources). Corrections and superseded values are preserved in the dataset for full traceability.
 
 ### Tech stack
 

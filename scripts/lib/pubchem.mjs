@@ -134,13 +134,36 @@ export const QUERY_ALIASES = {
   carbondisulfide: ['carbon disulfide'],
   carbontetrachloride: ['carbon tetrachloride'],
   hydrogen: ['hydrogen'],
+
+  // 2023（Cseri et al.）：SI 里的写法 PubChem 查不到，给正式名
+  'choline-lactate': ['choline lactate', 'L-choline lactate'],
+  'cyclohexanone-d6-ketal': ['1,1-dimethoxycyclohexane', 'cyclohexanone dimethyl ketal'],
+  'cyrene-hemiacetal': ['cyrene hemiacetal', '2-hydroxy-3-methoxy-dihydrolevoglucosenone'],
+  dbn: ['1,5-diazabicyclo[4.3.0]non-5-ene'],
+  'dimethyl-2-methylglutarate': ['dimethyl 2-methylpentanedioate', 'dimethyl 2-methylglutarate'],
+  gvl: ['gamma-valerolactone', '5-methyloxolan-2-one', '4-valerolactone'],
+  'n3-aminopropyl-azepanone': ['1-(3-aminopropyl)azepan-2-one'],
+  'n3-aminopropyl-pyrrolidone': ['1-(3-aminopropyl)pyrrolidin-2-one'],
+  nndimethyllactamide: ['N,N-dimethyl lactamide', '2-hydroxy-N,N-dimethylpropanamide'],
+  pinene: ['alpha-pinene', 'α-pinene', '2,6,6-trimethylbicyclo[3.1.1]hept-2-ene'],
 };
 
 /**
  * 明确不富集的化合物：混合物 / 商品名，PubChem 无单一 CID。
  * 硬凑一个 CID 只会污染检索结果，故列白名单跳过。
  */
-export const NO_ENRICH = new Set(['pump-oil', 'silicone-grease', 'apiezon-h-grease']);
+export const NO_ENRICH = new Set([
+  'pump-oil',
+  'silicone-grease',
+  'apiezon-h-grease',
+  // 2023 新增的聚合物 / 混合物 / 商品名，PubChem 无单一 CID
+  'peg400',
+  'ppg400',
+  'priamine1071',
+  'tpgs-750-m',
+  'methylsoyate',
+  'reline',
+]);
 
 /**
  * 单个化合物的完整查询：按候选名依次尝试 → CID → properties + synonyms。

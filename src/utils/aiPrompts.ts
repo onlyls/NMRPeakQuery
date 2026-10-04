@@ -47,7 +47,7 @@ export function buildPrompts(
       'You are an NMR spectroscopy expert. Given a compound (name / CAS / formula / SMILES),',
       'a deuterated solvent and a nucleus, report the LITERATURE reference chemical shifts of',
       'that compound in that solvent for the requested nucleus, based on standard literature',
-      '(Gottlieb 1997, Fulmer 2010, Babij 2016) and general NMR knowledge.',
+      '(Gottlieb 1997, Fulmer 2010, Babij 2016, Cseri 2023) and general NMR knowledge.',
       '',
       'Rules:',
       '- One entry per distinct signal; shift is the center value in ppm.',

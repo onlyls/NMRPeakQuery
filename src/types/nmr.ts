@@ -1,12 +1,15 @@
 /* ============================================================================
  * NMRPeakQuery — 领域数据模型 (src/types/nmr.ts)
  *
- * 数据来源（三篇原始文献）：
+ * 数据来源（四篇原始文献）：
  *   - gottlieb1997  Gottlieb, Kotlyar, Nudelman, J. Org. Chem. 1997, 62, 7512.
  *   - fulmer2010    Fulmer et al., Organometallics 2010, 29, 2176.  (以其 Supporting
  *                   Information 的 Table S1/S2 为准，SI 已修订原文若干错误)
  *   - babij2016     Babij et al., Org. Process Res. Dev. 2016, 20, 1047.
  *                   (以其 Supporting Information 的 Table S1–S12 为准)
+ *   - cseri2023     Cseri, Kumar, Palchuber, Székely, ACS Sustainable Chem. Eng. 2023,
+ *                   11, 8274.  (以其 Supporting Information 的 Part 4 为准，
+ *                   覆盖新兴绿色溶剂、酸、碱等在 8 种氘代溶剂中的痕量位移)
  *
  * 与方案文档中原始契约的差异（已修正）：
  *   1. 溶剂由 11 种补全为 12 种（新增 c6d6 / 苯-d6），并使用规范 ID 而非展示名；
@@ -16,11 +19,25 @@
  *   5. 文献未观测到的位移一律为「缺失」而非 0。
  * ========================================================================== */
 
-/** 数据来源标识 */
-export type SourceId = 'gottlieb1997' | 'fulmer2010' | 'babij2016';
+/**
+ * 数据来源标识。
+ * 前四个为一级文献（参与合并与优先级判定）；
+ * solventReference 为溶剂物理性质/溶剂峰参考表（三级来源，仅补充展示，不参与合并）。
+ */
+export type SourceId =
+  | 'gottlieb1997'
+  | 'fulmer2010'
+  | 'babij2016'
+  | 'cseri2023'
+  | 'solventReference';
 
-/** 氘代溶剂规范 ID（12 种） */
+/**
+ * 氘代溶剂规范 ID。
+ * 前 12 种来自一级文献（含化合物位移数据）；
+ * 后 9 种（referenceOnly）仅由厂商参考表覆盖，无化合物位移数据。
+ */
 export type SolventId =
+  // ---- 文献覆盖的 12 种 ----
   | 'cdcl3' // 氯仿-d (CDCl3)
   | 'dcm_d2' // 二氯甲烷-d2 (CD2Cl2)
   | 'acetone_d6' // 丙酮-d6 ((CD3)2CO / acetone-d6)
@@ -32,7 +49,17 @@ export type SolventId =
   | 'thf_d8' // 四氢呋喃-d8 (THF-d8)
   | 'toluene_d8' // 甲苯-d8 (toluene-d8)
   | 'chlorobenzene_d5' // 氯苯-d5 (C6D5Cl)
-  | 'tfe_d3'; // 三氟乙醇-d3 (TFE-d3)
+  | 'tfe_d3' // 三氟乙醇-d3 (TFE-d3)
+  // ---- 仅参考表覆盖的 9 种（referenceOnly） ----
+  | 'acoh_d4' // 乙酸-d4 (CD3COOD)
+  | 'cyclohexane_d12' // 环己烷-d12 (C6D12)
+  | 'dmf_d7' // N,N-二甲基甲酰胺-d7 ((CD3)2NCDO)
+  | 'dioxane_d8' // 1,4-二氧六环-d8 (C4D8O2)
+  | 'ethanol_d6' // 乙醇-d6 (C2D5OD)
+  | 'isopropanol_d8' // 2-丙醇-d8 ((CD3)2CDOD)
+  | 'pyridine_d5' // 吡啶-d5 (C5D5N)
+  | 'tfa_d' // 三氟乙酸-d (CF3COOD)
+  | 'tetrachloroethane_d2'; // 1,1,2,2-四氯乙烷-d2 (C2D2Cl4)
 
 /** 观测核素 */
 export type NucleusType = '1H' | '13C';
@@ -103,6 +130,36 @@ export interface SolventSignal {
   source: SourceId;
 }
 
+/** 溶剂物理性质（来自溶剂参考表，三级来源，非文献原文） */
+export interface SolventProperties {
+  cas?: string;
+  /** 分子量 (g/mol) */
+  mw?: number;
+  /** 密度 (g/mL) */
+  density?: number;
+  /** 熔点 (°C) */
+  meltingPoint?: number;
+  /** 沸点 (°C) */
+  boilingPoint?: number;
+  /** 介电常数 */
+  dielectricConstant?: number;
+  /** 物理量口径说明（如沸点为区间值） */
+  physicalNote?: string;
+  /** 该条数据的来源（均为参考表来源） */
+  source: SourceId;
+}
+
+/** 溶剂自身峰的参考值（来自溶剂参考表，与文献 signals 分开存放） */
+export interface SolventReferenceSignal {
+  kind: SolventSignalKind;
+  nucleus: NucleusType;
+  shift: number;
+  multiplicity?: string;
+  /** J_HD（¹H 残余峰）或 J_CD（¹³C 溶剂峰），单位 Hz */
+  coupling?: number[];
+  note?: string;
+}
+
 /** 溶剂元数据 */
 export interface SolventMeta {
   id: SolventId;
@@ -112,7 +169,14 @@ export interface SolventMeta {
   formula: string;
   /** 文献中出现的各种写法（原始拼写，用于解析与容错检索） */
   aliases: string[];
+  /** 文献来源的溶剂自身信号（残余质子峰 / 水峰 / ¹³C 溶剂峰） */
   signals: SolventSignal[];
+  /** 溶剂物理性质（参考表） */
+  properties?: SolventProperties;
+  /** 溶剂自身峰的参考值（参考表，仅展示，不参与检索/合并） */
+  referenceSignals?: SolventReferenceSignal[];
+  /** true = 无文献化合物位移数据，仅由参考表覆盖 */
+  referenceOnly?: boolean;
 }
 
 /** 外部数据库补充字段的溯源（非文献原文） */
@@ -164,6 +228,8 @@ export interface SourceInfo {
   doi: string;
   /** 实际采用的载体：正文表格 或 Supporting Information */
   usedPart: string;
+  /** 无 DOI 的来源（厂商参考表）改用网页链接，页脚渲染为超链接 */
+  urls?: { label: string; href: string }[];
 }
 
 /** 数据集元信息 */
@@ -181,8 +247,8 @@ export interface DatasetMeta {
   counts: {
     compounds: number;
     signals: number;
-    /** 各来源贡献的信号条数 */
-    bySource: Record<SourceId, number>;
+    /** 各来源贡献的信号条数（含参考表的溶剂自身信号） */
+    bySource: Partial<Record<SourceId, number>>;
   };
 }
 
