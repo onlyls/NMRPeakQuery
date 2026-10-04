@@ -1,0 +1,7 @@
+# Vite 产物带内容哈希，可长期强缓存
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# 文献数据集偶尔会更新（v1 → v2），用短缓存兼顾更新及时性
+/data/*
+  Cache-Control: public, max-age=300

@@ -1,0 +1,16 @@
+node_modules
+dist
+dist-ssr
+scripts/.cache
+.wrangler
+.dev.vars
+*.local
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.log
+
+# 内部资料：文献 PDF 与设计文档，不随公开仓库发布
+SupportingDatas/
+.trae/documents/
