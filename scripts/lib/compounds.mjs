@@ -40,6 +40,13 @@ export const COMPOUND_SYNONYMS = [
     aliases: ['dioxane', '1,4-dioxane', 'p-dioxane', '1,4diethyleneoxide'],
   },
   {
+    // 石油醚（烷烃混合物）：仅 Aberdeen 教材附表的 pyridine-d5 列给出低置信度位移，
+    // 一级文献未收录，故只有该溶剂的信号。
+    id: 'petroleum-ether',
+    name: 'Petroleum ether',
+    aliases: ['petroleum ether', 'petroleumether', 'pet ether', 'ligroin'],
+  },
+  {
     id: 'tert-butanol',
     name: 'tert-Butyl alcohol',
     aliases: ['tert-butyl alcohol', 'tert-butanol', 't-butanol', '2-methyl-2-propanol'],
@@ -402,6 +409,18 @@ export const COMPOUND_SYNONYMS = [
   { id: 'water', name: 'Water', aliases: ['water'] },
 ];
 
+/**
+ * 额外简称/别写 → 既有规范 id。
+ * 仅补映射、不新建同义组，避免改动既有展示名。
+ * 这些写法出现于 Aberdeen 教材附表的杂质名（DMF / DMSO / THF / i-Propanol）。
+ */
+const EXTRA_COMPOUND_ALIASES = {
+  dmf: 'dimethylformamide',
+  dmso: 'dimethylsulfoxide',
+  thf: 'tetrahydrofuran',
+  'i-propanol': '2-propanol',
+};
+
 /** 归一化写法 → 规范 id（同义组 + 兜底为归一化字符串本身） */
 export const COMPOUND_ALIAS_INDEX = (() => {
   /** @type {Record<string,string>} */
@@ -409,6 +428,7 @@ export const COMPOUND_ALIAS_INDEX = (() => {
   for (const g of COMPOUND_SYNONYMS) {
     for (const a of [g.id, g.name, ...g.aliases]) idx[normalizeName(a)] = g.id;
   }
+  for (const [a, id] of Object.entries(EXTRA_COMPOUND_ALIASES)) idx[normalizeName(a)] = id;
   return idx;
 })();
 
@@ -572,6 +592,7 @@ export const COMPOUND_CHINESE = {
   nndimethyllactamide: 'N,N-二甲基乳酰胺',
   ptoluenesulfonicacid: '对甲苯磺酸',
   peg400: '聚乙二醇 400（PEG 400）',
+  'petroleum-ether': '石油醚',
   pinacolone: '频哪酮（3,3-二甲基-2-丁酮）',
   ppg400: '聚丙二醇 400（PPG 400）',
   priamine1071: 'Priamine 1071（二聚体二胺）',

@@ -376,3 +376,85 @@ export const SOLVENT_REFERENCE = {
     ],
   },
 };
+
+/* ============================================================================
+ * 低置信度来源：Aberdeen 教材附表
+ *
+ * 出处：Crews, Rodríguez & Jaspars, "Tables for Organic Structure Analysis"
+ *       （University of Aberdeen；SupportingDatas/Tables.pdf）。
+ *
+ * 仅采用其中「1H NMR shifts of common impurities in various solvents (δ ppm (mult))」
+ * 表 Pyridine-d5 列的数据。该表为教材附表（非一级文献），脚注注明转引自
+ * J. Org. Chem. 1997, 62, 7512-7515，与其他来源交叉验证差距较大，置信度存疑；
+ * 在溶剂元数据存为 uncertainImpurityShifts 供总览，另由 build-dataset 注入为
+ * pyridine-d5 的化合物 ¹H 信号（标记 lowConfidence），使其可被检索到，UI 提示「存疑」。
+ * ========================================================================== */
+export const ABERDEEN_TABLE_SOURCE = {
+  id: 'aberdeenTables',
+  citation:
+    'Crews, Rodríguez & Jaspars, Tables for Organic Structure Analysis ' +
+    '(University of Aberdeen) — 杂质表 "1H NMR shifts of common impurities in various solvents"',
+  doi: '',
+  /** 无 DOI，改用原始 PDF 链接（页脚 / 关于页渲染为超链接） */
+  urls: [
+    {
+      label: 'Tables for Organic Structure Analysis (PDF)',
+      href: 'https://homepages.abdn.ac.uk/m.jaspars/pages/OSA/Tables.pdf',
+    },
+  ],
+  usedPart:
+    '仅采用杂质表 “1H NMR shifts of common impurities in various solvents” 中 Pyridine-d₅ 列的 ¹H 位移',
+};
+
+/**
+ * 低置信度杂质位移：Aberdeen 教材附表「1H NMR shifts of common impurities in
+ * various solvents (δ ppm (mult))」中 Pyridine-d5 列的 ¹H 位移。
+ *
+ * 该表脚注注明数据转引自 J. Org. Chem. 1997, 62, 7512-7515（Gottlieb 1997）；
+ * 与其他来源交叉验证差距较大，仅展示并标注存疑，不参与检索与合并。
+ * 其他氘代溶剂列因同样原因不予收录。
+ *
+ * 注意：附表仅给出「杂质名 + δ (mult)」，未提供任何谱峰归属；
+ * 故此处只保留 name / shift / multiplicity 三项，不得臆测补入归属。
+ * @type {Record<string, Array<{name:string,shift:number,multiplicity?:string}>>}
+ */
+export const ABERDEEN_UNCERTAIN_IMPURITIES = {
+  pyridine_d5: [
+    { name: 'Acetic Acid', shift: 2.13, multiplicity: 's' },
+    { name: 'Acetone', shift: 2.0, multiplicity: 's' },
+    { name: 'Acetonitrile', shift: 1.85, multiplicity: 's' },
+    { name: 'Benzene', shift: 7.33, multiplicity: 's' },
+    { name: 't-Butanol', shift: 1.37, multiplicity: 's' },
+    { name: 'Chloroform', shift: 8.41, multiplicity: 's' },
+    { name: 'Cyclohexane', shift: 1.38, multiplicity: 's' },
+    { name: 'Dichloromethane', shift: 5.62, multiplicity: 's' },
+    { name: 'Diethyl Ether', shift: 3.38, multiplicity: 'q' },
+    { name: 'Diethyl Ether', shift: 1.12, multiplicity: 't' },
+    { name: 'DMF', shift: 2.72, multiplicity: 's' },
+    { name: 'DMF', shift: 2.66, multiplicity: 's' },
+    { name: 'DMSO', shift: 2.49, multiplicity: 's' },
+    { name: 'p-Dioxane', shift: 3.61, multiplicity: 's' },
+    { name: 'Ethanol', shift: 3.86, multiplicity: 'q' },
+    { name: 'Ethanol', shift: 1.29, multiplicity: 't' },
+    { name: 'Ethyl Acetate', shift: 4.06, multiplicity: 'q' },
+    { name: 'Ethyl Acetate', shift: 1.94, multiplicity: 's' },
+    { name: 'Ethyl Acetate', shift: 1.1, multiplicity: 't' },
+    { name: 'Methanol', shift: 3.57, multiplicity: 's' },
+    { name: 'Petroleum Ether', shift: 1.2, multiplicity: 'bs' },
+    { name: 'Petroleum Ether', shift: 0.86, multiplicity: 't' },
+    { name: 'i-Propanol', shift: 4.16, multiplicity: 'm' },
+    { name: 'i-Propanol', shift: 1.29, multiplicity: 'd' },
+    { name: 'n-Propanol', shift: 3.75, multiplicity: 't' },
+    { name: 'n-Propanol', shift: 1.7, multiplicity: 'm' },
+    { name: 'n-Propanol', shift: 0.97, multiplicity: 't' },
+    { name: 'Pyridine', shift: 8.71, multiplicity: 'm' },
+    { name: 'Pyridine', shift: 7.58, multiplicity: 'm' },
+    { name: 'Pyridine', shift: 7.21, multiplicity: 'm' },
+    { name: 'THF', shift: 3.67, multiplicity: 'm' },
+    { name: 'THF', shift: 1.64, multiplicity: 'm' },
+    { name: 'Toluene', shift: 7.22, multiplicity: 'm' },
+    { name: 'Toluene', shift: 2.22, multiplicity: 's' },
+    { name: 'Triethylamine', shift: 2.43, multiplicity: 'q' },
+    { name: 'Triethylamine', shift: 0.96, multiplicity: 't' },
+  ],
+};

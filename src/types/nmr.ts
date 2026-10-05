@@ -29,15 +29,16 @@ export type SourceId =
   | 'fulmer2010'
   | 'babij2016'
   | 'cseri2023'
-  | 'solventReference';
+  | 'solventReference'
+  | 'aberdeenTables';
 
 /**
  * 氘代溶剂规范 ID。
- * 前 12 种来自一级文献（含化合物位移数据）；
- * 后 9 种（referenceOnly）仅由厂商参考表覆盖，无化合物位移数据。
+ * 前 13 种含化合物位移数据（pyridine-d5 仅来自教材附表三级来源，标记低置信度）；
+ * 后 8 种（referenceOnly）仅由厂商参考表覆盖，无化合物位移数据。
  */
 export type SolventId =
-  // ---- 文献覆盖的 12 种 ----
+  // ---- 含化合物位移数据的 13 种 ----
   | 'cdcl3' // 氯仿-d (CDCl3)
   | 'dcm_d2' // 二氯甲烷-d2 (CD2Cl2)
   | 'acetone_d6' // 丙酮-d6 ((CD3)2CO / acetone-d6)
@@ -50,14 +51,14 @@ export type SolventId =
   | 'toluene_d8' // 甲苯-d8 (toluene-d8)
   | 'chlorobenzene_d5' // 氯苯-d5 (C6D5Cl)
   | 'tfe_d3' // 三氟乙醇-d3 (TFE-d3)
-  // ---- 仅参考表覆盖的 9 种（referenceOnly） ----
+  | 'pyridine_d5' // 吡啶-d5 (C5D5N)；化合物数据仅来自教材附表，置信度存疑
+  // ---- 仅参考表覆盖的 8 种（referenceOnly） ----
   | 'acoh_d4' // 乙酸-d4 (CD3COOD)
   | 'cyclohexane_d12' // 环己烷-d12 (C6D12)
   | 'dmf_d7' // N,N-二甲基甲酰胺-d7 ((CD3)2NCDO)
   | 'dioxane_d8' // 1,4-二氧六环-d8 (C4D8O2)
   | 'ethanol_d6' // 乙醇-d6 (C2D5OD)
   | 'isopropanol_d8' // 2-丙醇-d8 ((CD3)2CDOD)
-  | 'pyridine_d5' // 吡啶-d5 (C5D5N)
   | 'tfa_d' // 三氟乙酸-d (CF3COOD)
   | 'tetrachloroethane_d2'; // 1,1,2,2-四氯乙烷-d2 (C2D2Cl4)
 
@@ -107,6 +108,8 @@ export interface NMRSignal {
   footnoteRefs: string[];
   /** 数据来源 */
   source: SourceId;
+  /** 低置信度标记：教材附表等三级来源，与其他来源交叉验证差距较大，UI 需提示「存疑」 */
+  lowConfidence?: boolean;
   /** 被覆盖的历史值（保留可追溯性） */
   superseded?: SupersededValue[];
   /** 原始行文本，便于人工回溯校对 */
@@ -160,11 +163,27 @@ export interface SolventReferenceSignal {
   note?: string;
 }
 
+/**
+ * 低置信度杂质位移（教材附表，供溶剂详情总览；同一批数据另作为化合物信号可被检索）。
+ * 附表仅给出杂质名与 δ (mult)，无谱峰归属，故此处不含归属字段。
+ */
+export interface UncertainImpurityShift {
+  /** 原文杂质名 */
+  name: string;
+  /** ¹H 位移 (ppm) */
+  shift: number;
+  multiplicity?: string;
+  /** 数据来源 */
+  source: SourceId;
+}
+
 /** 溶剂元数据 */
 export interface SolventMeta {
   id: SolventId;
   /** 规范展示名 */
   label: string;
+  /** 中文名（展示用，替代分子式作为第二名称） */
+  chineseName: string;
   /** 化学式 */
   formula: string;
   /** 文献中出现的各种写法（原始拼写，用于解析与容错检索） */
@@ -175,6 +194,8 @@ export interface SolventMeta {
   properties?: SolventProperties;
   /** 溶剂自身峰的参考值（参考表，仅展示，不参与检索/合并） */
   referenceSignals?: SolventReferenceSignal[];
+  /** 低置信度杂质位移（教材附表 Pyridine-d5 列，供总览；同一批数据另作为化合物信号可被检索） */
+  uncertainImpurityShifts?: UncertainImpurityShift[];
   /** true = 无文献化合物位移数据，仅由参考表覆盖 */
   referenceOnly?: boolean;
 }

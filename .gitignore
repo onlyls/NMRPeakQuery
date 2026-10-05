@@ -13,6 +13,16 @@ scripts/.cache
 .idea
 *.log
 
+# 小程序版：仅本地开发，不随公开仓库发布（含其数据构建脚本与品牌图标）
+miniprogram/
+scripts/build-miniprogram-data.mjs
+scripts/make-icon.mjs
+scripts/make-tabbar-icons.mjs
+public/brand/
+
+# 编辑器/工具本地状态
+.pai/
+
 # 内部资料：文献 PDF 与设计文档，不随公开仓库发布
 SupportingDatas/
 .trae/documents/

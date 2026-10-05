@@ -1,27 +1,24 @@
 /* ============================================================================
- * build-offline.mjs — 生成两种可在「无网条件」下使用的离线版本
+ * build-offline.mjs — 生成可在「无网条件」下使用的单文件离线版
  *
  * 产物（输出到 release/）：
- *   1. NMRPeakQuery-offline/        便携文件夹版：静态站点 + 零依赖本地服务器 + 启动脚本
- *   2. NMRPeakQuery-offline.html    单文件版：CSS/JS/数据集全部内联，双击即用
+ *   NMRPeakQuery-offline.html    单文件版：CSS/JS/数据集全部内联，双击即用
  *
  * 用法：npm run build:offline
  *
- * 说明：离线版不需要任何后端。数据集内联或随包携带，AI 助手在无网时不可用
+ * 说明：离线版不需要任何后端。数据集内联，AI 助手在无网时不可用
  *       （其状态探测失败会被静默降级，不影响其余功能）。
  * ========================================================================== */
 import { build } from 'vite';
 import react from '@vitejs/plugin-react';
-import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
-const templateDir = join(here, 'offline');
 const releaseDir = join(root, 'release');
-const portableDir = join(releaseDir, 'NMRPeakQuery-offline');
 const tmpDir = join(root, '.offline-tmp');
 const singleFile = join(releaseDir, 'NMRPeakQuery-offline.html');
 const datasetPath = join(root, 'public', 'data', 'nmr_data_v1.json');
@@ -35,31 +32,6 @@ function typeCheck() {
     cwd: root,
     stdio: 'inherit',
   });
-}
-
-/* ------------------------------ 便携文件夹版 ------------------------------ */
-
-async function buildPortable() {
-  log('构建便携文件夹版 →', portableDir);
-  await rm(portableDir, { recursive: true, force: true });
-
-  await build({
-    root,
-    configFile: false,
-    base: './', // 相对路径，可放在任意目录 / 子路径下托管
-    plugins: [react()],
-    build: { outDir: portableDir, emptyOutDir: true, target: 'es2020' },
-    logLevel: 'warn',
-  });
-
-  // Cloudflare 专用文件在本地静态服务器中无意义
-  await rm(join(portableDir, '_headers'), { force: true });
-  await rm(join(portableDir, '_redirects'), { force: true });
-
-  // 附带零依赖服务器与一键启动脚本
-  for (const f of ['serve.mjs', 'start.bat', 'start.sh', '使用说明.txt']) {
-    await cp(join(templateDir, f), join(portableDir, f));
-  }
 }
 
 /* -------------------------------- 单文件版 -------------------------------- */
@@ -199,37 +171,10 @@ window.__NMR_OFFLINE_DATA__ = ${dataLiteral};
 `;
 }
 
-/* --------------------------------- 打包 zip -------------------------------- */
-
-function makeZip() {
-  if (process.platform !== 'win32') {
-    log('非 Windows 平台，跳过 zip 打包（可自行压缩 release/ 目录）');
-    return;
-  }
-  try {
-    log('压缩便携文件夹版 …');
-    execFileSync(
-      'powershell',
-      [
-        '-NoProfile',
-        '-Command',
-        `Compress-Archive -Path '${portableDir}' -DestinationPath '${join(releaseDir, 'NMRPeakQuery-offline.zip')}' -Force`,
-      ],
-      { stdio: 'inherit' },
-    );
-  } catch (e) {
-    log('zip 打包失败（可忽略，目录产物已生成）：', e.message);
-  }
-}
-
 /* ---------------------------------- 主流程 --------------------------------- */
 
 typeCheck();
 await mkdir(releaseDir, { recursive: true });
-await buildPortable();
 await buildSingleFile();
-makeZip();
 
-log('完成。产物目录：', releaseDir);
-log('  1) release/NMRPeakQuery-offline/      → 双击 启动.bat（Windows）或 node serve.mjs');
-log('  2) release/NMRPeakQuery-offline.html  → 双击即可用，零依赖');
+log('完成。产物：', singleFile, '→ 双击即可用，零依赖');

@@ -9,12 +9,11 @@ interface Props {
 
 /**
  * 氘代溶剂选择器。
- * - 前 12 种为一级文献覆盖的溶剂（含化合物位移数据）；
- * - 后 9 种仅由厂商参考表覆盖（referenceOnly），无化合物数据，
+ * - 前 13 种为含化合物位移数据的溶剂（pyridine-d5 数据来自教材附表，置信度存疑）；
+ * - 后 8 种仅由厂商参考表覆盖（referenceOnly），无化合物数据，
  *   仅用于查询溶剂自身峰与物理性质，故单独分组并标注。
  *
- * 展示用「中圆点」分隔名称与分子式：分子式本身可能含英文括号
- * （如 (CD3)2CO），若再用括号包裹就会产生歧义。
+ * 展示用「中圆点」分隔英文名与中文名。
  */
 export default function SolventSelector({ value, onChange }: Props) {
   const { dataset } = useDataset();
@@ -23,7 +22,7 @@ export default function SolventSelector({ value, onChange }: Props) {
   const referenceOnly = all.filter((s) => s.referenceOnly);
 
   const optionText = (s: SolventMeta) =>
-    `${formatFormula(s.label)} · ${formatFormula(s.formula)}`;
+    `${formatFormula(s.label)} · ${s.chineseName}`;
 
   return (
     <label className="block">

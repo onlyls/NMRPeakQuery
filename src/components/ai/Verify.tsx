@@ -11,7 +11,7 @@
  * 本地文献数据集始终先渲染且为权威来源，AI 为独立参考、绝不阻塞。
  * ========================================================================== */
 import { useCallback, useMemo, useRef, useState, type ReactNode } from 'react';
-import { History, Loader2, RefreshCw, Sparkles } from 'lucide-react';
+import { ChevronDown, ChevronRight, History, Loader2, RefreshCw, Sparkles } from 'lucide-react';
 import type {
   CompoundData,
   NucleusType,
@@ -298,6 +298,14 @@ export function SolventSignalsBlock({
     [solvent, nucleus],
   );
 
+  /** 低置信度来源的杂质位移（教材附表 Pyridine-d5 列，仅 ¹H） */
+  const uncertainImpurities = useMemo(
+    () => (nucleus === '1H' ? [...(solvent?.uncertainImpurityShifts ?? [])] : []),
+    [solvent, nucleus],
+  );
+  /** 该区块条目较多（36 条），默认折叠，避免把下方峰位输入框挤出视口 */
+  const [impuritiesOpen, setImpuritiesOpen] = useState(false);
+
   /** 溶剂物理性质（来自参考表） */
   const propItems = useMemo(() => {
     const p = solvent?.properties;
@@ -402,6 +410,42 @@ export function SolventSignalsBlock({
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {uncertainImpurities.length > 0 && (
+        <div className="mt-2 rounded-md border border-rose-100 bg-rose-50/60">
+          <button
+            type="button"
+            onClick={() => setImpuritiesOpen((o) => !o)}
+            className="flex w-full flex-wrap items-center gap-x-1.5 gap-y-0.5 px-2 py-1.5 text-left text-[10px] font-medium text-rose-600"
+          >
+            {impuritiesOpen ? (
+              <ChevronDown className="h-3 w-3 shrink-0" />
+            ) : (
+              <ChevronRight className="h-3 w-3 shrink-0" />
+            )}
+            <span>低置信度参考 · 吡啶-d5 中常见杂质 ¹H 位移（{uncertainImpurities.length} 条）</span>
+            <SourceBadge source="aberdeenTables" />
+          </button>
+          {impuritiesOpen && (
+            <div className="px-2 pb-1.5">
+              <div className="mb-1 text-[10px] font-normal text-rose-400">
+                教材附表仅给出杂质名与 δ (mult)，无谱峰归属；与其他来源交叉验证差距较大
+              </div>
+              <div className="grid grid-cols-1 gap-y-0.5">
+                {uncertainImpurities.map((u, i) => (
+                  <div key={i} className="flex items-baseline justify-between gap-2 text-xs">
+                    <span className="truncate text-slate-600">{u.name}</span>
+                    <span className="shrink-0 font-mono font-semibold text-slate-700">
+                      δ {u.shift}
+                      {u.multiplicity ? ` (${u.multiplicity})` : ''}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

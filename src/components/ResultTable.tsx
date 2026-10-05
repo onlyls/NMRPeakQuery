@@ -18,7 +18,7 @@ import type {
 } from '../types/nmr';
 import { useDataset } from '../hooks/useNMRSearch';
 import type { NameHit } from '../utils/searchEngine';
-import { SignalRow, formatShift, SourceBadge } from './bits';
+import { SignalRow, UncertainBadge, formatShift, SourceBadge } from './bits';
 import { formatAssignment, formatFormula, formatNucleus } from '../utils/chemText';
 import { AiVerifyButton, SolventVerifyButton } from './ai/Verify';
 
@@ -196,6 +196,7 @@ function SingleResults({
                       Δ {deviation.toFixed(3)}
                     </span>
                     <SourceBadge source={signal.source} />
+                    {signal.lowConfidence && <UncertainBadge />}
                   </div>
                 </div>
               ))}
@@ -267,6 +268,7 @@ function MultiResults({
                       {formatAssignment(p.signal.assignment)}
                     </span>
                   )}
+                  {p.signal.lowConfidence && <UncertainBadge />}
                   <span className="ml-auto font-mono text-[10px] text-orange-500">
                     Δ {p.deviation.toFixed(3)}
                   </span>

@@ -26,7 +26,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SOLVENTS, buildSolventAliasMap } from './lib/solvents.mjs';
-import { SOLVENT_REFERENCE, SOLVENT_REFERENCE_SOURCE } from './lib/solvent-reference.mjs';
+import {
+  SOLVENT_REFERENCE,
+  SOLVENT_REFERENCE_SOURCE,
+  ABERDEEN_TABLE_SOURCE,
+  ABERDEEN_UNCERTAIN_IMPURITIES,
+} from './lib/solvent-reference.mjs';
 import { resolveCompound, normalizeName, COMPOUND_ALIAS_INDEX, COMPOUND_CHINESE } from './lib/compounds.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -125,6 +130,7 @@ const solvents = SOLVENTS.map((s) => {
   const meta = {
     id: s.id,
     label: s.label,
+    chineseName: s.chineseName,
     formula: s.formula,
     aliases: s.aliases,
     signals: solventSignals.get(s.id) ?? [],
@@ -144,6 +150,15 @@ const solvents = SOLVENTS.map((s) => {
       source: SOLVENT_REFERENCE_SOURCE.id,
     };
     meta.referenceSignals = ref.signals;
+  }
+  const impurities = ABERDEEN_UNCERTAIN_IMPURITIES[s.id];
+  if (impurities?.length) {
+    // 低置信度杂质位移（教材附表 Pyridine-d5 列）：此处存一份供溶剂详情总览展示；
+    // 同一批数据另作为化合物 ¹H 信号注入（见文件后段），以支持两种检索模式。
+    meta.uncertainImpurityShifts = impurities.map((u) => ({
+      ...u,
+      source: ABERDEEN_TABLE_SOURCE.id,
+    }));
   }
   return meta;
 });
@@ -288,6 +303,49 @@ for (const [key, rows] of groups) {
   (c.signals[solventId] ??= {})[nucleus] = signals;
 }
 
+/**
+ * Aberdeen 教材附表：Pyridine-d5 列杂质 ¹H 位移（三级来源，置信度存疑）。
+ *
+ * pyridine-d5 无一级文献化合物数据，故把这 36 条杂质位移接入为化合物 ¹H 信号，
+ * 使其可被「峰位查询」与「名称查询」两种模式命中；统一标记 lowConfidence，
+ * UI 需显示「存疑」提示。不参与 PRECEDENCE 合并（RANK 不含 aberdeenTables），
+ * 直接追加在合并结果之后，故不会与一级文献信号发生覆盖判断。
+ */
+let aberdeenInjected = 0;
+for (const [solventId, rows] of Object.entries(ABERDEEN_UNCERTAIN_IMPURITIES)) {
+  for (const u of rows) {
+    const { id, name, category } = resolveCompound(u.name);
+    if (!compoundMap.has(id)) {
+      compoundMap.set(id, {
+        id,
+        name,
+        nameRaw: [u.name],
+        chineseName: '',
+        cas: '',
+        formula: '',
+        mw: 0,
+        category,
+        signals: {},
+      });
+    }
+    const c = compoundMap.get(id);
+    /** @type {import('../src/types/nmr').NMRSignal} */
+    const sig = {
+      shift: u.shift,
+      coupling: [],
+      footnoteRefs: [],
+      source: ABERDEEN_TABLE_SOURCE.id,
+      lowConfidence: true,
+    };
+    if (u.multiplicity) sig.multiplicity = u.multiplicity;
+    ((c.signals[solventId] ??= {})['1H'] ??= []).push(sig);
+    aberdeenInjected += 1;
+  }
+}
+for (const c of compoundMap.values())
+  for (const byNuc of Object.values(c.signals))
+    for (const arr of Object.values(byNuc)) arr.sort((a, b) => a.shift - b.shift);
+
 const compounds = [...compoundMap.values()].sort((a, b) => a.id.localeCompare(b.id));
 
 /* --------------------------- PubChem 富集（可选） -------------------------- */
@@ -388,7 +446,9 @@ for (const [id, raws] of rawNamesByCompound) {
   for (const norm of raws.keys()) compoundAliases[norm] ??= id;
 }
 
-const bySource = Object.fromEntries(PRECEDENCE.map((s) => [s, 0]));
+const bySource = Object.fromEntries(
+  [...PRECEDENCE, ABERDEEN_TABLE_SOURCE.id].map((s) => [s, 0]),
+);
 let signalCount = 0;
 for (const c of compounds) {
   for (const byNuc of Object.values(c.signals)) {
@@ -403,12 +463,14 @@ bySource[SOLVENT_REFERENCE_SOURCE.id] = solvents.reduce(
   (n, s) => n + (s.referenceSignals?.length ?? 0),
   0,
 );
+// 低置信度来源（教材附表）计入化合物信号数（与下列注入条数一致）
+bySource[ABERDEEN_TABLE_SOURCE.id] = aberdeenInjected;
 
 const dataset = {
   meta: {
     version: '1.2.0',
     generatedAt: new Date().toISOString(),
-    sources: [...sources.map((s) => s.info), SOLVENT_REFERENCE_SOURCE],
+    sources: [...sources.map((s) => s.info), SOLVENT_REFERENCE_SOURCE, ABERDEEN_TABLE_SOURCE],
     precedence: PRECEDENCE,
     corrections,
     solventAliases: buildSolventAliasMap(),
@@ -453,4 +515,5 @@ console.log(`[build] superseded 记录: ${supersededTotal} 条`);
 console.log(`[build] 仅单一来源出现的化合物: ${singleSource.length} 个`);
 console.log(`[build] PubChem 富集化合物: ${enrichedCount} 个`);
 console.log(`[build] 人工中文名: ${chineseCount} 个`);
+console.log(`[build] 教材附表低置信度注入（pyridine-d5 杂质 ¹H）: ${aberdeenInjected} 条`);
 console.log(`[build] 文件大小: ${(fs.statSync(OUT_FILE).size / 1024 / 1024).toFixed(2)} MB`);

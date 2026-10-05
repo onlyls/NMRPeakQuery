@@ -1,7 +1,7 @@
 {
  "meta": {
   "version": "1.2.0",
-  "generatedAt": "2026-10-04T16:34:14.432Z",
+  "generatedAt": "2026-10-05T16:10:56.816Z",
   "sources": [
    {
     "id": "babij2016",
@@ -42,6 +42,18 @@
      }
     ],
     "usedPart": "溶剂物理性质表 + 残余质子/水/¹³C 溶剂峰参考值表"
+   },
+   {
+    "id": "aberdeenTables",
+    "citation": "Crews, Rodríguez & Jaspars, Tables for Organic Structure Analysis (University of Aberdeen) — 杂质表 \"1H NMR shifts of common impurities in various solvents\"",
+    "doi": "",
+    "urls": [
+     {
+      "label": "Tables for Organic Structure Analysis (PDF)",
+      "href": "https://homepages.abdn.ac.uk/m.jaspars/pages/OSA/Tables.pdf"
+     }
+    ],
+    "usedPart": "仅采用杂质表 “1H NMR shifts of common impurities in various solvents” 中 Pyridine-d₅ 列的 ¹H 位移"
    }
   ],
   "precedence": [
@@ -144,6 +156,10 @@
    "TFE-d3": "tfe_d3",
    "trifluoroethanol-d3": "tfe_d3",
    "2,2,2-trifluoroethanol-d3": "tfe_d3",
+   "pyridine-d5": "pyridine_d5",
+   "pyridined5": "pyridine_d5",
+   "C5D5N": "pyridine_d5",
+   "perdeuteriopyridine": "pyridine_d5",
    "acetic acid-d4": "acoh_d4",
    "CD3COOD": "acoh_d4",
    "aceticacid-d4": "acoh_d4",
@@ -165,10 +181,6 @@
    "isopropanol-d8": "isopropanol_d8",
    "i-propanol-d8": "isopropanol_d8",
    "2propanol-d8": "isopropanol_d8",
-   "pyridine-d5": "pyridine_d5",
-   "pyridined5": "pyridine_d5",
-   "C5D5N": "pyridine_d5",
-   "perdeuteriopyridine": "pyridine_d5",
    "TFA-d": "tfa_d",
    "trifluoroacetic acid-d": "tfa_d",
    "trifluoroaceticacid-d": "tfa_d",
@@ -182,6 +194,10 @@
    "1,4-dioxane": "dioxane",
    "p-dioxane": "dioxane",
    "1,4diethyleneoxide": "dioxane",
+   "petroleum-ether": "petroleum-ether",
+   "petroleumether": "petroleum-ether",
+   "petether": "petroleum-ether",
+   "ligroin": "petroleum-ether",
    "tert-butanol": "tert-butanol",
    "tert-butylalcohol": "tert-butanol",
    "t-butanol": "tert-butanol",
@@ -437,6 +453,10 @@
    "tris(2-hydroxyethyl)methylammonium-methylsulfate": "tris(2-hydroxyethyl)methylammonium-methylsulfate",
    "tris(2-hydroxyethyl)methylammoniummethylsulfate": "tris(2-hydroxyethyl)methylammonium-methylsulfate",
    "water": "water",
+   "dmf": "dimethylformamide",
+   "dmso": "dimethylsulfoxide",
+   "thf": "tetrahydrofuran",
+   "i-propanol": "2-propanol",
    "pyridine": "pyridine",
    "acetone": "acetone",
    "formicacid": "formicacid",
@@ -498,13 +518,14 @@
    "carbontetrachloride": "carbontetrachloride"
   },
   "counts": {
-   "compounds": 153,
-   "signals": 8868,
+   "compounds": 154,
+   "signals": 8904,
    "bySource": {
     "babij2016": 1705,
     "fulmer2010": 2208,
     "gottlieb1997": 11,
     "cseri2023": 4944,
+    "aberdeenTables": 36,
     "solventReference": 84
    }
   }
@@ -513,6 +534,7 @@
   {
    "id": "cdcl3",
    "label": "CDCl3",
+   "chineseName": "氘代氯仿",
    "formula": "CDCl3",
    "aliases": [
     "CDCl3",
@@ -582,6 +604,7 @@
   {
    "id": "dcm_d2",
    "label": "CD2Cl2",
+   "chineseName": "氘代二氯甲烷",
    "formula": "CD2Cl2",
    "aliases": [
     "CD2Cl2",
@@ -649,6 +672,7 @@
   {
    "id": "acetone_d6",
    "label": "Acetone-d6",
+   "chineseName": "氘代丙酮",
    "formula": "(CD3)2CO",
    "aliases": [
     "(CD3)2CO",
@@ -738,6 +762,7 @@
   {
    "id": "dmso_d6",
    "label": "DMSO-d6",
+   "chineseName": "氘代二甲基亚砜",
    "formula": "(CD3)2SO",
    "aliases": [
     "(CD3)2SO",
@@ -809,6 +834,7 @@
   {
    "id": "c6d6",
    "label": "C6D6",
+   "chineseName": "氘代苯",
    "formula": "C6D6",
    "aliases": [
     "C6D6",
@@ -876,6 +902,7 @@
   {
    "id": "cd3cn",
    "label": "CD3CN",
+   "chineseName": "氘代乙腈",
    "formula": "CD3CN",
    "aliases": [
     "CD3CN",
@@ -963,6 +990,7 @@
   {
    "id": "cd3od",
    "label": "CD3OD",
+   "chineseName": "氘代甲醇",
    "formula": "CD3OD",
    "aliases": [
     "CD3OD",
@@ -1041,6 +1069,7 @@
   {
    "id": "d2o",
    "label": "D2O",
+   "chineseName": "重水",
    "formula": "D2O",
    "aliases": [
     "D2O",
@@ -1079,6 +1108,7 @@
   {
    "id": "thf_d8",
    "label": "THF-d8",
+   "chineseName": "氘代四氢呋喃",
    "formula": "C4D8O",
    "aliases": [
     "THF-d8",
@@ -1169,6 +1199,7 @@
   {
    "id": "toluene_d8",
    "label": "Toluene-d8",
+   "chineseName": "氘代甲苯",
    "formula": "C7D8",
    "aliases": [
     "toluene-d8",
@@ -1328,6 +1359,7 @@
   {
    "id": "chlorobenzene_d5",
    "label": "C6D5Cl",
+   "chineseName": "氘代氯苯",
    "formula": "C6D5Cl",
    "aliases": [
     "C6D5Cl",
@@ -1389,6 +1421,7 @@
   {
    "id": "tfe_d3",
    "label": "TFE-d3",
+   "chineseName": "氘代三氟乙醇",
    "formula": "CF3CD2OD",
    "aliases": [
     "TFE-d3",
@@ -1479,8 +1512,298 @@
    ]
   },
   {
+   "id": "pyridine_d5",
+   "label": "Pyridine-d5",
+   "chineseName": "氘代吡啶",
+   "formula": "C5D5N",
+   "aliases": [
+    "pyridine-d5",
+    "pyridined5",
+    "C5D5N",
+    "perdeuteriopyridine"
+   ],
+   "signals": [],
+   "properties": {
+    "cas": "7291-22-7",
+    "mw": 84.13,
+    "density": 1.05,
+    "meltingPoint": -42,
+    "boilingPoint": 114.4,
+    "source": "solventReference"
+   },
+   "referenceSignals": [
+    {
+     "kind": "residual",
+     "nucleus": "1H",
+     "shift": 8.71,
+     "multiplicity": "br",
+     "note": "H2/6"
+    },
+    {
+     "kind": "residual",
+     "nucleus": "1H",
+     "shift": 7.55,
+     "multiplicity": "br",
+     "note": "H4"
+    },
+    {
+     "kind": "residual",
+     "nucleus": "1H",
+     "shift": 7.19,
+     "multiplicity": "br",
+     "note": "H3/5"
+    },
+    {
+     "kind": "solventCarbon",
+     "nucleus": "13C",
+     "shift": 149.9,
+     "multiplicity": "t",
+     "coupling": [
+      27.5
+     ]
+    },
+    {
+     "kind": "solventCarbon",
+     "nucleus": "13C",
+     "shift": 135.5,
+     "multiplicity": "t",
+     "coupling": [
+      24.5
+     ]
+    },
+    {
+     "kind": "solventCarbon",
+     "nucleus": "13C",
+     "shift": 123.5,
+     "multiplicity": "t",
+     "coupling": [
+      25
+     ]
+    }
+   ],
+   "uncertainImpurityShifts": [
+    {
+     "name": "Acetic Acid",
+     "shift": 2.13,
+     "multiplicity": "s",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Acetone",
+     "shift": 2,
+     "multiplicity": "s",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Acetonitrile",
+     "shift": 1.85,
+     "multiplicity": "s",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Benzene",
+     "shift": 7.33,
+     "multiplicity": "s",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "t-Butanol",
+     "shift": 1.37,
+     "multiplicity": "s",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Chloroform",
+     "shift": 8.41,
+     "multiplicity": "s",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Cyclohexane",
+     "shift": 1.38,
+     "multiplicity": "s",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Dichloromethane",
+     "shift": 5.62,
+     "multiplicity": "s",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Diethyl Ether",
+     "shift": 3.38,
+     "multiplicity": "q",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Diethyl Ether",
+     "shift": 1.12,
+     "multiplicity": "t",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "DMF",
+     "shift": 2.72,
+     "multiplicity": "s",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "DMF",
+     "shift": 2.66,
+     "multiplicity": "s",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "DMSO",
+     "shift": 2.49,
+     "multiplicity": "s",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "p-Dioxane",
+     "shift": 3.61,
+     "multiplicity": "s",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Ethanol",
+     "shift": 3.86,
+     "multiplicity": "q",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Ethanol",
+     "shift": 1.29,
+     "multiplicity": "t",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Ethyl Acetate",
+     "shift": 4.06,
+     "multiplicity": "q",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Ethyl Acetate",
+     "shift": 1.94,
+     "multiplicity": "s",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Ethyl Acetate",
+     "shift": 1.1,
+     "multiplicity": "t",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Methanol",
+     "shift": 3.57,
+     "multiplicity": "s",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Petroleum Ether",
+     "shift": 1.2,
+     "multiplicity": "bs",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Petroleum Ether",
+     "shift": 0.86,
+     "multiplicity": "t",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "i-Propanol",
+     "shift": 4.16,
+     "multiplicity": "m",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "i-Propanol",
+     "shift": 1.29,
+     "multiplicity": "d",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "n-Propanol",
+     "shift": 3.75,
+     "multiplicity": "t",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "n-Propanol",
+     "shift": 1.7,
+     "multiplicity": "m",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "n-Propanol",
+     "shift": 0.97,
+     "multiplicity": "t",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Pyridine",
+     "shift": 8.71,
+     "multiplicity": "m",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Pyridine",
+     "shift": 7.58,
+     "multiplicity": "m",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Pyridine",
+     "shift": 7.21,
+     "multiplicity": "m",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "THF",
+     "shift": 3.67,
+     "multiplicity": "m",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "THF",
+     "shift": 1.64,
+     "multiplicity": "m",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Toluene",
+     "shift": 7.22,
+     "multiplicity": "m",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Toluene",
+     "shift": 2.22,
+     "multiplicity": "s",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Triethylamine",
+     "shift": 2.43,
+     "multiplicity": "q",
+     "source": "aberdeenTables"
+    },
+    {
+     "name": "Triethylamine",
+     "shift": 0.96,
+     "multiplicity": "t",
+     "source": "aberdeenTables"
+    }
+   ]
+  },
+  {
    "id": "acoh_d4",
    "label": "Acetic acid-d4",
+   "chineseName": "氘代乙酸",
    "formula": "CD3COOD",
    "aliases": [
     "acetic acid-d4",
@@ -1544,6 +1867,7 @@
   {
    "id": "cyclohexane_d12",
    "label": "Cyclohexane-d12",
+   "chineseName": "氘代环己烷",
    "formula": "C6D12",
    "aliases": [
     "cyclohexane-d12",
@@ -1588,6 +1912,7 @@
   {
    "id": "dmf_d7",
    "label": "DMF-d7",
+   "chineseName": "氘代二甲基甲酰胺",
    "formula": "(CD3)2NCDO",
    "aliases": [
     "DMF-d7",
@@ -1669,6 +1994,7 @@
   {
    "id": "dioxane_d8",
    "label": "1,4-Dioxane-d8",
+   "chineseName": "氘代1,4-二氧六环",
    "formula": "C4D8O2",
    "aliases": [
     "1,4-dioxane-d8",
@@ -1714,6 +2040,7 @@
   {
    "id": "ethanol_d6",
    "label": "Ethanol-d6",
+   "chineseName": "氘代乙醇",
    "formula": "C2D5OD",
    "aliases": [
     "ethanol-d6",
@@ -1782,6 +2109,7 @@
   {
    "id": "isopropanol_d8",
    "label": "2-Propanol-d8",
+   "chineseName": "氘代异丙醇",
    "formula": "(CD3)2CDOD",
    "aliases": [
     "2-propanol-d8",
@@ -1826,79 +2154,9 @@
    ]
   },
   {
-   "id": "pyridine_d5",
-   "label": "Pyridine-d5",
-   "formula": "C5D5N",
-   "aliases": [
-    "pyridine-d5",
-    "pyridined5",
-    "C5D5N",
-    "perdeuteriopyridine"
-   ],
-   "signals": [],
-   "referenceOnly": true,
-   "properties": {
-    "cas": "7291-22-7",
-    "mw": 84.13,
-    "density": 1.05,
-    "meltingPoint": -42,
-    "boilingPoint": 114.4,
-    "source": "solventReference"
-   },
-   "referenceSignals": [
-    {
-     "kind": "residual",
-     "nucleus": "1H",
-     "shift": 8.71,
-     "multiplicity": "br",
-     "note": "H2/6"
-    },
-    {
-     "kind": "residual",
-     "nucleus": "1H",
-     "shift": 7.55,
-     "multiplicity": "br",
-     "note": "H4"
-    },
-    {
-     "kind": "residual",
-     "nucleus": "1H",
-     "shift": 7.19,
-     "multiplicity": "br",
-     "note": "H3/5"
-    },
-    {
-     "kind": "solventCarbon",
-     "nucleus": "13C",
-     "shift": 149.9,
-     "multiplicity": "t",
-     "coupling": [
-      27.5
-     ]
-    },
-    {
-     "kind": "solventCarbon",
-     "nucleus": "13C",
-     "shift": 135.5,
-     "multiplicity": "t",
-     "coupling": [
-      24.5
-     ]
-    },
-    {
-     "kind": "solventCarbon",
-     "nucleus": "13C",
-     "shift": 123.5,
-     "multiplicity": "t",
-     "coupling": [
-      25
-     ]
-    }
-   ]
-  },
-  {
    "id": "tfa_d",
    "label": "TFA-d",
+   "chineseName": "氘代三氟乙酸",
    "formula": "CF3COOD",
    "aliases": [
     "TFA-d",
@@ -1949,6 +2207,7 @@
   {
    "id": "tetrachloroethane_d2",
    "label": "1,1,2,2-Tetrachloroethane-d2",
+   "chineseName": "氘代四氯乙烷",
    "formula": "C2D2Cl4",
    "aliases": [
     "1,1,2,2-tetrachloroethane-d2",
@@ -4471,6 +4730,34 @@
        "source": "cseri2023",
        "rawText": "64.19 | 1 | - | Propanol | C1 | Ref. 2",
        "assignment": "C1"
+      }
+     ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 0.97,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "t"
+      },
+      {
+       "shift": 1.7,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "m"
+      },
+      {
+       "shift": 3.75,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "t"
       }
      ]
     }
@@ -10420,6 +10707,26 @@
        "assignment": "CH"
       }
      ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 1.29,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "d"
+      },
+      {
+       "shift": 4.16,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "m"
+      }
+     ]
     }
    },
    "smiles": "CC(C)O",
@@ -11952,6 +12259,18 @@
        "assignment": "CO"
       }
      ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 2.13,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "s"
+      }
+     ]
     }
    },
    "smiles": "CC(=O)O",
@@ -12504,6 +12823,18 @@
        "assignment": "CH3"
       }
      ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 2,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "s"
+      }
+     ]
     }
    },
    "smiles": "CC(=O)C",
@@ -12913,6 +13244,18 @@
        "source": "fulmer2010",
        "rawText": "acetonitrile | CN | 116.79 | 116.92 | 116.43 | 115.76 | 116.02 | 115.93 | 117.60 | 117.91 | 118.26 | 118.95 | 118.06 | 119.68",
        "assignment": "CN"
+      }
+     ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 1.85,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "s"
       }
      ]
     }
@@ -16059,6 +16402,18 @@
        "source": "fulmer2010",
        "rawText": "benzene | CH | 128.84 | 128.68 | 128.37 | 128.57 | 128.62 | 128.38 | 129.15 | 128.30 | 129.32 | 129.84 | 129.34 | -",
        "assignment": "CH"
+      }
+     ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 7.33,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "s"
       }
      ]
     }
@@ -21821,6 +22176,18 @@
        "assignment": "CH"
       }
      ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 8.41,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "s"
+      }
+     ]
     }
    },
    "smiles": "C(Cl)(Cl)Cl",
@@ -24591,6 +24958,18 @@
        "source": "fulmer2010",
        "rawText": "cyclohexane | CH | 2 | 27.58 | 27.38 | 26.94 | 27.31 | 27.23 | 26.99 | 27.51 | 26.33 | 27.63 | 28.34 | 27.96 | -",
        "assignment": "CH2"
+      }
+     ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 1.38,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "s"
       }
      ]
     }
@@ -30855,6 +31234,18 @@
        "assignment": "CH2"
       }
      ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 5.62,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "s"
+      }
+     ]
     }
    },
    "smiles": "C(Cl)Cl",
@@ -31746,6 +32137,26 @@
        "source": "fulmer2010",
        "rawText": "CH | 2 | 66.14 | 66.11 | 65.91 | 65.94 | 65.94 | 65.79 | 66.12 | 62.05 | 66.32 | 67.55 | 66.88 | 66.42",
        "assignment": "CH2"
+      }
+     ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 1.12,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "t"
+      },
+      {
+       "shift": 3.38,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "q"
       }
      ]
     }
@@ -38803,6 +39214,26 @@
        "assignment": "CH"
       }
      ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 2.66,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "s"
+      },
+      {
+       "shift": 2.72,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "s"
+      }
+     ]
     }
    },
    "smiles": "CN(C)C=O",
@@ -39731,6 +40162,18 @@
        "assignment": "CH3"
       }
      ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 2.49,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "s"
+      }
+     ]
     }
    },
    "smiles": "CS(=O)C",
@@ -40038,6 +40481,18 @@
        "source": "fulmer2010",
        "rawText": "1,4-dioxane | CH | 2 | 67.65 | 67.47 | 67.14 | 67.17 | 67.16 | 66.95 | 67.60 | 66.36 | 67.72 | 68.52 | 68.11 | 67.19",
        "assignment": "CH2"
+      }
+     ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 3.61,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "s"
       }
      ]
     }
@@ -44409,6 +44864,26 @@
        "assignment": "CH2"
       }
      ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 1.29,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "t"
+      },
+      {
+       "shift": 3.86,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "q"
+      }
+     ]
     }
    },
    "smiles": "CCO",
@@ -46195,6 +46670,34 @@
        "source": "fulmer2010",
        "rawText": "CO | 170.32 | 171.24 | 171.36 | 170.02 | 170.44 | 170.20 | 170.96 | 170.31 | 171.68 | 175.55 | 172.89 | 175.26",
        "assignment": "CO"
+      }
+     ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 1.1,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "t"
+      },
+      {
+       "shift": 1.94,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "s"
+      },
+      {
+       "shift": 4.06,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "q"
       }
      ]
     }
@@ -61647,6 +62150,18 @@
        "source": "fulmer2010",
        "rawText": "methanol | CH | 3 | 49.64 | 50.45 | 50.41 | 49.90 | 49.97 | 49.66 | 49.77 | 48.59 | 49.90 | 50.67 | 49.86 | 49.50 | 12",
        "assignment": "CH3"
+      }
+     ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 3.57,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "s"
       }
      ]
     }
@@ -78694,6 +79209,41 @@
    "chineseNameSource": "manual"
   },
   {
+   "id": "petroleum-ether",
+   "name": "Petroleum ether",
+   "nameRaw": [
+    "Petroleum Ether"
+   ],
+   "chineseName": "石油醚",
+   "cas": "",
+   "formula": "",
+   "mw": 0,
+   "category": "Organic Solvent",
+   "signals": {
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 0.86,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "t"
+      },
+      {
+       "shift": 1.2,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "bs"
+      }
+     ]
+    }
+   },
+   "chineseNameSource": "manual"
+  },
+  {
    "id": "pinacolone",
    "name": "Pinacolone",
    "nameRaw": [
@@ -88146,6 +88696,34 @@
        "assignment": "CH(2,6)"
       }
      ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 7.21,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "m"
+      },
+      {
+       "shift": 7.58,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "m"
+      },
+      {
+       "shift": 8.71,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "m"
+      }
+     ]
     }
    },
    "smiles": "C1=CC=NC=C1",
@@ -92222,6 +92800,18 @@
        "assignment": "(CH3)3C"
       }
      ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 1.37,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "s"
+      }
+     ]
     }
    },
    "smiles": "CC(C)(C)O",
@@ -93273,6 +93863,26 @@
        "source": "fulmer2010",
        "rawText": "tetrahydrofuran | CH | 2 | (2,5) | 68.03 | 68.16 | 67.97 | 67.75 | 67.80 | 67.64 | 68.07 | 67.03 | 68.33 | 69.53 | 68.83 | 68.68",
        "assignment": "CH2(2,5)"
+      }
+     ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 1.64,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "m"
+      },
+      {
+       "shift": 3.67,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "m"
       }
      ]
     }
@@ -94714,6 +95324,26 @@
        "source": "fulmer2010",
        "rawText": "C(1) | 138.24 | 138.36 | 137.89 | 137.84 | 137.91 | 137.65 | 138.48 | 137.35 | 138.90 | 139.92 | 138.85 | -",
        "assignment": "C(1)"
+      }
+     ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 2.22,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "s"
+      },
+      {
+       "shift": 7.22,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "m"
       }
      ]
     }
@@ -100328,6 +100958,26 @@
        "source": "fulmer2010",
        "rawText": "CH | 2 | 47.18 | 46.75 | 46.25 | 46.82 | 46.77 | 46.36 | 47.07 | 45.74 | 47.10 | 48.45 | 46.96 | 47.19",
        "assignment": "CH2"
+      }
+     ]
+    },
+    "pyridine_d5": {
+     "1H": [
+      {
+       "shift": 0.96,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "t"
+      },
+      {
+       "shift": 2.43,
+       "coupling": [],
+       "footnoteRefs": [],
+       "source": "aberdeenTables",
+       "lowConfidence": true,
+       "multiplicity": "q"
       }
      ]
     }

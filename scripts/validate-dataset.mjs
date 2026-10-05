@@ -119,7 +119,9 @@ for (const [sol, kind, nuc, want] of SOLVENT_ANCHORS) {
 /* ------------------------------ 3. 异常值扫描 ----------------------------- */
 
 const RANGE = { '1H': [-2, 16], '13C': [-20, 250] };
-const VALID_SOURCES = new Set(Object.keys(PARSED_BASELINE));
+// 一级文献来源外，另允许教材附表（aberdeenTables）作为化合物信号来源：
+// 其为 pyridine-d5 独有的低置信度数据（信号带 lowConfidence 标记）。
+const VALID_SOURCES = new Set([...Object.keys(PARSED_BASELINE), 'aberdeenTables']);
 let signalCount = 0;
 let supersededCount = 0;
 let hugeDelta = 0;
@@ -189,6 +191,8 @@ const noEnrichSet = new Set([
   'tpgs-750-m',
   'methylsoyate',
   'reline',
+  // 教材附表附录的石油醚（烷烃混合物），PubChem 无单一 CID
+  'petroleum-ether',
 ]);
 let enriched = 0;
 const missingExternal = [];

@@ -30,6 +30,12 @@ export const SOURCE_META: Record<SourceId, { label: string; cls: string; title: 
     cls: 'bg-violet-50 text-violet-700 ring-violet-200',
     title: 'Sigma-Aldrich 氘代溶剂性质参考表 / 杂质化学位移表（厂商参考表，三级来源，非一级文献）',
   },
+  aberdeenTables: {
+    label: '教材表',
+    cls: 'bg-rose-50 text-rose-700 ring-rose-200',
+    title:
+      'Crews / Rodríguez / Jaspars, Tables for Organic Structure Analysis（University of Aberdeen）— 教材附表，置信度存疑，仅收录 pyridine-d5 中常见杂质的 ¹H 位移',
+  },
 };
 
 export function SourceBadge({ source }: { source: SourceId }) {
@@ -66,6 +72,18 @@ export function formatMultiplicity(s: NMRSignal): string {
   return [mult, j].filter(Boolean).join(', ');
 }
 
+/** 低置信度提示徽标（教材附表等三级来源，数值与其他来源交叉验证差距较大） */
+export function UncertainBadge() {
+  return (
+    <span
+      title="教材附表数据，与其他来源交叉验证差距较大，置信度存疑"
+      className="inline-flex items-center rounded bg-rose-50 px-1.5 py-0.5 text-[10px] font-medium text-rose-600 ring-1 ring-inset ring-rose-200"
+    >
+      存疑
+    </span>
+  );
+}
+
 /** 一条化合物信号的紧凑行 */
 export function SignalRow({ signal, dim = false }: { signal: NMRSignal; dim?: boolean }) {
   return (
@@ -83,6 +101,7 @@ export function SignalRow({ signal, dim = false }: { signal: NMRSignal; dim?: bo
           <span className="text-xs text-slate-500">{formatMultiplicity(signal)}</span>
         )}
         <SourceBadge source={signal.source} />
+        {signal.lowConfidence && <UncertainBadge />}
       </div>
       {signal.superseded?.map((sup, i) => (
         <div key={i} className="mt-0.5 pl-1 text-[11px] text-slate-400">
